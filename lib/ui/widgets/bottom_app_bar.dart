@@ -13,17 +13,15 @@ class TphotosBottomAppBar extends StatelessWidget {
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
       // color: Colors.blue,
-      child: IconTheme(
-          data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-          child: Row(
-            children: [
-              IconButton(
-                  onPressed: () => onTap(0), icon: const Icon(Icons.timer)),
-              const Spacer(),
-              IconButton(
-                  onPressed: () => onTap(1), icon: const Icon(Icons.search))
-            ],
-          )),
+      child: Row(
+        children: [
+          IconButton(
+              onPressed: () => onTap(0), icon:  Icon( (currentIndex == 0) ? Icons.timer : Icons.timer_outlined)),
+          const Spacer(),
+          IconButton(
+              onPressed: () => onTap(1), icon:  Icon((currentIndex == 1)? Icons.manage_search_outlined:Icons.search ))
+        ],
+      ),
     );
   }
 }

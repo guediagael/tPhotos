@@ -4,7 +4,6 @@ import 'package:tphotos/dispatchers/timeline_dispatcher.dart';
 import 'package:tphotos/ui/widgets/bottom_app_bar.dart';
 
 import 'search_screen.dart';
-import 'timeline_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final MainActionListener mainActionListener;

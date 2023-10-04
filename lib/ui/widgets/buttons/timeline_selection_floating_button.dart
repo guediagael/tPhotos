@@ -19,7 +19,7 @@ class SelectedPhotosMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      color: Theme.of(context).colorScheme.onPrimaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(

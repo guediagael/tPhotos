@@ -42,7 +42,9 @@ class TimelineBloc extends BaseBloc {
     for (var key in oldGroupedList.keys) {
       var oldList = oldGroupedList[key];
       var newList = oldList!.where((element) => !element.isSelected);
-      newGroupedList[key] = newList.toList(growable: false);
+      if (newList.isNotEmpty) {
+        newGroupedList[key] = newList.toList(growable: false);
+      }
     }
 
     DateTime prevDate = DateTime.now().subtract(const Duration(days: 5));
@@ -63,12 +65,16 @@ class TimelineBloc extends BaseBloc {
 
     List<PhotoListItem> newList = <PhotoListItem>[];
 
+    bool selection = eventOnDateItemPress
+        .loadedList[eventOnDateItemPress.newSelection]!
+        .any((element) => !element.isSelected);
+
     for (var element in eventOnDateItemPress
         .loadedList[eventOnDateItemPress.newSelection]!) {
-      newList.add(element.copyWith(isSelected: !element.isSelected));
+      newList.add(element.copyWith(isSelected: selection));
     }
-    newItems[eventOnDateItemPress.newSelection] = newList;
 
+    newItems[eventOnDateItemPress.newSelection] = newList;
     DateTime prevDate = DateTime.now().subtract(const Duration(days: 5));
     emitter(
         TimelineStateLoaded(prevLastDate: prevDate, groupedPhotos: newItems));
