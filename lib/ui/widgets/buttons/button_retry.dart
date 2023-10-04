@@ -9,8 +9,8 @@ class ButtonRetry extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () => onRetry(),
-        child: Row(
-          children: const [Icon(Icons.refresh), Text("Refresh")],
+        child: const Row(
+          children: [Icon(Icons.refresh), Text("Refresh")],
         ));
   }
 }

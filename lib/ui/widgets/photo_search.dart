@@ -12,24 +12,19 @@ class PhotoSearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
         tag: photoListItem.toString(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CachedNetworkImage(
-              imageUrl: "http://via.placeholder.com/200x150", //TODO
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                      colorFilter: const ColorFilter.mode(
-                          Colors.red, BlendMode.colorBurn)),
-                ),
-              ),
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+        child: CachedNetworkImage(
+          imageUrl: photoListItem.uri,
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                  colorFilter: const ColorFilter.mode(
+                      Colors.red, BlendMode.colorBurn)),
             ),
-          ],
+          ),
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ));
   }
 }

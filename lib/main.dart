@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
+import 'package:tphotos/dispatchers/main_dispatcher.dart';
 import 'package:tphotos/dispatchers/welcome_dispatcher.dart';
 import 'package:tphotos/services/telegram.dart';
 import 'package:tphotos/ui/screens/welcome_placeholder.dart';
@@ -43,11 +44,12 @@ class MyApp extends StatelessWidget {
         future: welcomeScreenSettings(),
         builder: (ctx, AsyncSnapshot<Map<String, dynamic>> screenSettings) {
           if (screenSettings.hasData) {
-            final datas = screenSettings.data!;
-            return WelcomeDispatcher.buildWelcomeScreen(
-                apiHash: datas['tgApiHash'],
-                appVersion: datas['appVersion'],
-                applicationId: datas['tgAppId']);
+            // final datas = screenSettings.data!;
+            // return WelcomeDispatcher.buildWelcomeScreen(
+            //     apiHash: datas['tgApiHash'],
+            //     appVersion: datas['appVersion'],
+            //     applicationId: datas['tgAppId']);
+            return MainScreenDispatcher.buildMainScreen();
           } else {
             return const PlaceHolderWelcomeScreen();
           }

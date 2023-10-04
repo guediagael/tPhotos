@@ -10,8 +10,6 @@ import 'base_event.dart';
 
 class BaseBlocListener<E extends BaseEvent, S extends BaseState>
     extends BlocListener with CopyableWidget {
-  // final BaseBloc bloc;
-  // final Widget? child;
 
   BaseBlocListener(
       {Key? key,

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tphotos/action_listeners/otp_action_listener.dart';
@@ -6,6 +7,7 @@ import 'package:tphotos/bloc/base/navigator/base_nav_bloc_builder.dart';
 import 'package:tphotos/bloc/base/navigator/base_nav_bloc_listener.dart';
 import 'package:tphotos/bloc/base/navigator/base_nav_event.dart';
 import 'package:tphotos/bloc/opt/nav/otp_nav_bloc.dart';
+import 'package:tphotos/dispatchers/main_dispatcher.dart';
 import 'package:tphotos/rich_button/rich_button_state_manager.dart';
 import 'package:tphotos/ui/screens/otp_screen.dart';
 
@@ -24,9 +26,8 @@ class OtpDispatcher extends StatefulWidget {
 }
 
 class _OtpDispatcherState extends State<OtpDispatcher> with OtpActionListener {
-  RichButtonState _richButtonState= RichButtonState.initial;
+  RichButtonState _richButtonState = RichButtonState.initial;
   final _formKey = GlobalKey<FormState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +61,10 @@ class _OtpDispatcherState extends State<OtpDispatcher> with OtpActionListener {
     debugPrint("otp_dispatcher::onSendPressed $opt");
     if (_formKey.currentState?.validate() ?? false) {
       debugPrint("otp_dispatcher::onSendPressed otp valid");
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (ctx) => MainScreenDispatcher.buildMainScreen()),
+          (route) => false);
     }
   }
 }
