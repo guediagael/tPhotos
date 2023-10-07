@@ -20,12 +20,22 @@ class BaseBlocBuilder extends BlocBuilder<BaseBloc, BaseState> {
             bloc: bloc,
             buildWhen: buildWhenCondition ??
                 (BaseState prevState, BaseState newState) {
-                  return (prevState != newState) ||
-                      (newState.runtimeType == bloc.initialStateType);
+                  return !isCommonState(newState) &&
+                      ((prevState != newState) ||
+                          (newState.runtimeType == bloc.initialStateType));
                 });
 
   @override
   Widget build(BuildContext context, BaseState state) {
     return builder(context, state);
+  }
+
+  static bool isCommonState(Object state) {
+    return (state is SendErrorState) ||
+        (state is DialogSessionExpired) ||
+        (state is DialogLongErrorState) ||
+        (state is SnackBarShortErrorState) ||
+        (state is ScreenErrorState) ||
+        (state is SendToLoginState);
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tphotos/bloc/base/navigator/base_nav_event.dart';
 import 'package:tphotos/copyable_mixin.dart';
 import 'package:tphotos/dispatchers/phone_number_dispatcher.dart';
 import 'package:tphotos/dispatchers/welcome_dispatcher.dart';
@@ -40,19 +41,80 @@ class BaseNavigatorBlocListener<B extends BaseNavigatorBloc,
                 showDialog(
                     context: context,
                     builder: (ctx) => DialogBinaryAction(
-                        alertMessage: state.errorMessage,
-                        alertTitle: state.title,
-                        onPositivePressed: () => state.onPositiveTap(),
-                        onNegativePressed: () => state.onNegativeTap()));
+                          alertMessage: state.errorMessage,
+                          alertTitle: state.title,
+                          onPositivePress: () {
+                            debugPrint(
+                                "base_nav_bloc_listener::BaseNavigatorBlocListener::"
+                                "listener->\n state: "
+                                "BaseNavigatorStateShowActionableDialog ->"
+                                " dialog closed on positive tap");
+                            bloc.add(BaseNavigatorEventPop(state));
+                            state.onPositiveTap();
+                          },
+                          onNegativePress: () {
+                            debugPrint(
+                                "base_nav_bloc_listener::BaseNavigatorBlocListener::"
+                                "listener->\n state: "
+                                "BaseNavigatorStateShowActionableDialog ->"
+                                " dialog closed on negative tap");
+                            bloc.add(BaseNavigatorEventPop(state));
+                            state.onNegativeTap();
+                          },
+                        ));
+                //     .then((value) {
+                //   debugPrint(
+                //       "base_nav_bloc_listener::BaseNavigatorBlocListener::"
+                //           "listener->\n state: "
+                //           "BaseNavigatorStateShowActionableDialog ->"
+                //           " dialog closed with value:$value");
+                //   if (value != null && value == true) {
+                //     bloc.add(BaseNavigatorEventPop(state));
+                //     state.onPositiveTap();
+                //   } else {
+                //     bloc.add(BaseNavigatorEventPop(state));
+                //     state.onNegativeTap();
+                //   }
+                // });
               } else if (state is BaseNavigatorStateShowActionableErrorDialog) {
                 showDialog(
                     context: context,
                     builder: (ctx) => DialogBinaryAction(
-                        alertMessage: state.errorMessage,
-                        alertTitle: state.title,
-                        titleColor: Colors.red,
-                        onPositivePressed: () => state.onPositiveTap(),
-                        onNegativePressed: () => state.onNegativeTap()));
+                          alertMessage: state.errorMessage,
+                          alertTitle: state.title,
+                          titleColor: Colors.red,
+                          onPositivePress: () {
+                            debugPrint(
+                                "base_nav_bloc_listener::BaseNavigatorBlocListener::"
+                                "listener->\n state: "
+                                "BaseNavigatorStateShowActionableErrorDialog ->"
+                                " dialog closed on positive tap");
+                            bloc.add(BaseNavigatorEventPop(state));
+                            state.onPositiveTap();
+                          },
+                          onNegativePress: () {
+                            debugPrint(
+                                "base_nav_bloc_listener::BaseNavigatorBlocListener::"
+                                "listener->\n state: "
+                                "BaseNavigatorStateShowActionableErrorDialog ->"
+                                " dialog closed on negative tap");
+                            bloc.add(BaseNavigatorEventPop(state));
+                            state.onNegativeTap();
+                          },
+                        ));
+                //   .then((value) {
+                // debugPrint(
+                //     "base_nav_bloc_listener::BaseNavigatorBlocListener::"
+                //     "listener->\n state: "
+                //     "BaseNavigatorStateShowActionableErrorDialog ->"
+                //     " dialog closed with value:$value");
+                // if (value != null && value == true) {
+                //   state.onPositiveTap();
+                // } else {
+                //   state.onNegativeTap();
+                // }
+                // }
+                // );
               } else if (state is BaseNavigatorStateShowInfoDialog) {
                 showDialog(
                     context: context,

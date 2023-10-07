@@ -19,23 +19,40 @@ class SelectedPhotosMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.onPrimaryContainer,
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onPrimaryContainer),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
             IconButton(
-                onPressed: () => onCancel(), icon: const Icon(Icons.close)),
-            Text(count.toString()),
+                onPressed: () => onCancel(),
+                icon: Icon(
+                  Icons.close,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                )),
+            Text(
+              count.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+            ),
             const Spacer(),
             if (onShare != null)
               IconButton(
-                  onPressed: () => onShare!(), icon: const Icon(Icons.share)),
+                  onPressed: () => onShare!(),
+                  icon: Icon(Icons.share,
+                      color: Theme.of(context).colorScheme.onPrimary)),
             if (onAddToAlbum != null)
               IconButton(
-                  onPressed: () => onAddToAlbum!(), icon: const Icon(Icons.add)),
+                  onPressed: () => onAddToAlbum!(),
+                  icon: Icon(Icons.add,
+                      color: Theme.of(context).colorScheme.onPrimary)),
             IconButton(
-                onPressed: () => onDeleteSelection(), icon: const Icon(Icons.delete))
+                onPressed: () => onDeleteSelection(),
+                icon: Icon(Icons.delete,
+                    color: Theme.of(context).colorScheme.onPrimary))
           ],
         ),
       ),

@@ -41,8 +41,8 @@ abstract class BaseNavigatorBloc
       BaseNavigatorEventShowActionableDialog eventShowActionableDialog,
       Emitter<BaseNavigatorState> emitter) {
     emitter(BaseNavigatorStateShowActionableDialog(
-        onPositiveTap: () => eventShowActionableDialog.onNegativeTap(),
-        onNegativeTap: () => eventShowActionableDialog.onNegativeTap(),
+        onPositiveTap: eventShowActionableDialog.onPositiveTap,
+        onNegativeTap: eventShowActionableDialog.onNegativeTap,
         title: eventShowActionableDialog.title,
         errorMessage: eventShowActionableDialog.errorMessage));
   }

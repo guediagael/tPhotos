@@ -6,6 +6,7 @@ import 'package:tphotos/bloc/base/data/base_bloc_listener.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
 import 'package:tphotos/bloc/base/navigator/base_nav_bloc_builder.dart';
 import 'package:tphotos/bloc/base/navigator/base_nav_bloc_listener.dart';
+import 'package:tphotos/bloc/base/navigator/base_nav_event.dart';
 import 'package:tphotos/bloc/base/navigator/base_nav_state.dart';
 import 'package:tphotos/bloc/timeline/data/timeline_bloc.dart';
 import 'package:tphotos/bloc/timeline/data/timeline_event.dart';
@@ -33,7 +34,13 @@ class TimelineDispatcher extends StatefulWidget {
 class _TimelineDispatcherState extends State<TimelineDispatcher>
     with TimelineActionListener {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
+    debugPrint("timeline_dispatcher::didChangeDependencies");
     context.read<TimelineBloc>().add(TimelineEventLoad(DateTime.now()));
     super.didChangeDependencies();
   }
@@ -41,7 +48,7 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
   @override
   Widget build(BuildContext context) {
     return BaseNavigatorBlocListener(
-      bloc: context.watch<TimelineNavigatorBloc>(),
+      bloc: context.read<TimelineNavigatorBloc>(),
       navListener: (navContext, navState) {
         if (navState is TimelineNavigatorStateShowFullPicture) {
           Navigator.push(context,
@@ -49,27 +56,43 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
         }
       },
       child: BaseNavigatorBlocBuilder(
-        bloc: context.watch<TimelineNavigatorBloc>(),
+        bloc: context.read<TimelineNavigatorBloc>(),
         buildWhenCondition: (prevState, currentState) {
-          return (prevState != currentState) ||
-              (currentState is! TimelineNavigatorStateShowFullPicture);
+          debugPrint(
+              "timeline_dispatcher(BaseNavigatorBlocBuilder)::buildWhenCondition "
+              "prevState $prevState "
+              "currentState $currentState");
+          return !BaseNavigatorBlocBuilder.isCommonNavigatorState(
+                  currentState) &&
+              ((prevState != currentState) ||
+                  (currentState is! TimelineNavigatorStateShowFullPicture));
         },
         navigatorBlocWidgetBuilder:
             (BuildContext context, BaseNavigatorState state) {
           return BaseBlocListener(
-            bloc: context.watch<TimelineBloc>(),
-            navigatorBloc: context.watch<TimelineNavigatorBloc>(),
+            bloc: context.read<TimelineBloc>(),
+            navigatorBloc: context.read<TimelineNavigatorBloc>(),
             listener: (context, state) {
               debugPrint("timeline_dispatcher::bloclistener $state");
             },
             child: BaseBlocBuilder(
-              bloc: context.watch<TimelineBloc>(),
+              bloc: context.read<TimelineBloc>(),
               buildWhenCondition: (prevState, currentState) {
-                return (prevState != currentState) ||
-                    (currentState is TimelineStateInitial);
+                debugPrint("timeline_dispatcher::buildWhenCondition: prevState:"
+                    " $prevState, currentState: $currentState");
+                if ((currentState is TimelineStateLoaded) &&
+                    (prevState is TimelineStateLoaded)) {
+                  debugPrint("prev items: ${prevState.groupedPhotos}");
+
+                  debugPrint("current items: ${currentState.groupedPhotos}");
+                }
+                return !BaseBlocBuilder.isCommonState(currentState) &&
+                    ((prevState != currentState) ||
+                        (currentState is TimelineStateInitial));
               },
               builder: (BuildContext context, BaseState state) {
-                debugPrint("timeline_dispatcher::blocBuilder $state");
+                debugPrint(
+                    "timeline_dispatcher::blocBuilder building new $state");
                 if (state is TimelineStateInitial) {
                   return const Scaffold(
                     body: CustomScrollView(
@@ -86,7 +109,7 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
                 return TimelineScreen(
                   timelineActionListener: this,
                   timelinePhotos: (state as TimelineStateLoaded).groupedPhotos,
-                  zoomLevel: 1,
+                  zoomLevel: state.zoomLevel,
                 );
               },
             ),
@@ -108,10 +131,24 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
 
   @override
   void onDeleteSelection() {
-    Map<DateTime, List<PhotoListItem>> loadedPhotos =
-        (context.read<TimelineBloc>().state as TimelineStateLoaded)
-            .groupedPhotos;
-    context.read<TimelineBloc>().add(TimelineEventDeletePictures(loadedPhotos));
+    debugPrint("timeline_dispatcher::onDeleteSelection");
+    context.read<TimelineNavigatorBloc>().add(
+        BaseNavigatorEventShowActionableDialog(
+            title: "Delete Selected medias",
+            errorMessage:
+                "It will be deleted from the folder and from telegram.",
+            onPositiveTap: () {
+              debugPrint(
+                  "timeline_dispatcher::onDeleteSelection::onPositiveTap");
+              Map<DateTime, List<PhotoListItem>> loadedPhotos =
+                  (context.read<TimelineBloc>().state as TimelineStateLoaded)
+                      .groupedPhotos;
+              context
+                  .read<TimelineBloc>()
+                  .add(TimelineEventDeletePictures(loadedPhotos));
+            },
+            onNegativeTap: () {}));
+
   }
 
   @override
@@ -148,12 +185,13 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
   }
 
   @override
-  void onZoomIn() {
-    // TODO: implement onZoomIn
-  }
+  void onSortByUpdated(newSorting) {
+    Map<DateTime, List<PhotoListItem>> loadedPhotos =
+        (context.read<TimelineBloc>().state as TimelineStateLoaded)
+            .groupedPhotos;
 
-  @override
-  void onZoomOut() {
-    // TODO: implement onZoomOut
+    context.read<TimelineBloc>().add(TimelineEventOnSortUpdated(
+        loadedList: loadedPhotos.values.reduce((value, element) => value..addAll(element)),
+        zoomLevel:newSorting));
   }
 }

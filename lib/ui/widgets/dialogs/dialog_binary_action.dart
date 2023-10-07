@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 class DialogBinaryAction extends StatelessWidget {
   final String alertMessage;
   final String alertTitle;
-  final Function onPositivePressed;
-  final Function onNegativePressed;
   final Color? titleColor;
+  final Function onPositivePress;
+  final Function onNegativePress;
 
   const DialogBinaryAction(
       {Key? key,
       required this.alertMessage,
       required this.alertTitle,
-      required this.onPositivePressed,
-      required this.onNegativePressed, this.titleColor})
+      required this.onNegativePress,
+      required this.onPositivePress,
+      this.titleColor})
       : super(key: key);
 
   @override
@@ -26,14 +27,16 @@ class DialogBinaryAction extends StatelessWidget {
       actions: [
         TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              onNegativePressed();
+              debugPrint("dialog_binary_action::onCancelPressed");
+              // Navigator.pop(context, false);
+              onNegativePress();
             },
             child: const Text("Cancel")),
         ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
-              onPositivePressed();
+              debugPrint("dialog_binary_action::onOkayPressed");
+              // Navigator.pop(context, true);
+              onPositivePress();
             },
             child: const Text("Ok"))
       ],

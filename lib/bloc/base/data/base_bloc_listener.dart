@@ -10,7 +10,6 @@ import 'base_event.dart';
 
 class BaseBlocListener<E extends BaseEvent, S extends BaseState>
     extends BlocListener with CopyableWidget {
-
   BaseBlocListener(
       {Key? key,
       required BaseBloc bloc,
@@ -56,8 +55,9 @@ class BaseBlocListener<E extends BaseEvent, S extends BaseState>
               } else if (state is SendToLoginState) {
                 debugPrint("base_bloc_listener Sending to Login");
                 navigatorBloc.add(BaseNavigatorEventLogout());
+              } else {
+                listener(context, state);
               }
-              listener(context, state);
             });
 
   @override

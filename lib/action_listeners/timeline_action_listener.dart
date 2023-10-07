@@ -1,4 +1,5 @@
 import 'package:tphotos/ui/models/photo_list_item.dart';
+import 'package:tphotos/ui/models/timelie_group_by.dart';
 
 abstract mixin class TimelineActionListener{
   void onRefresh();
@@ -7,6 +8,5 @@ abstract mixin class TimelineActionListener{
   void onPhotoPressed(PhotoListItem photoListItem);
   void onPhotoLongPress(PhotoListItem photoListItem, DateTime groupDate);
   void onDatePressed(DateTime dateListItem);
-  void onZoomOut();
-  void onZoomIn();
+  void onSortByUpdated(TimelineGroupBy newSorting);
 }

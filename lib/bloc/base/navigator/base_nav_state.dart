@@ -4,7 +4,6 @@ abstract class BaseNavigatorState extends Equatable {
   final List<Object?> props;
 
   const BaseNavigatorState(this.props);
-
 }
 
 class BaseNavigatorStatePop extends BaseNavigatorState {
@@ -18,7 +17,10 @@ class BaseNavigatorStateShowActionableDialog extends BaseNavigatorState {
   final Function onNegativeTap;
 
   BaseNavigatorStateShowActionableDialog(
-      {required this.onPositiveTap, required this.onNegativeTap,required this.title, required this.errorMessage})
+      {required this.onPositiveTap,
+      required this.onNegativeTap,
+      required this.title,
+      required this.errorMessage})
       : super([title, errorMessage]);
 }
 
@@ -29,7 +31,10 @@ class BaseNavigatorStateShowActionableErrorDialog extends BaseNavigatorState {
   final Function onNegativeTap;
 
   BaseNavigatorStateShowActionableErrorDialog(
-      {required this.onPositiveTap, required this.onNegativeTap,required this.title, required this.errorMessage})
+      {required this.onPositiveTap,
+      required this.onNegativeTap,
+      required this.title,
+      required this.errorMessage})
       : super([title, errorMessage]);
 }
 
@@ -39,7 +44,9 @@ class BaseNavigatorStateShowInfoDialog extends BaseNavigatorState {
   final Function onPositiveTap;
 
   BaseNavigatorStateShowInfoDialog(
-      {required this.onPositiveTap,required this.title, required this.errorMessage})
+      {required this.onPositiveTap,
+      required this.title,
+      required this.errorMessage})
       : super([title, errorMessage]);
 }
 
@@ -49,23 +56,26 @@ class BaseNavigatorStateShowErrorInfoDialog extends BaseNavigatorState {
   final Function onPositiveTap;
 
   BaseNavigatorStateShowErrorInfoDialog(
-      {required this.onPositiveTap,required this.title, required this.errorMessage})
+      {required this.onPositiveTap,
+      required this.title,
+      required this.errorMessage})
       : super([title, errorMessage]);
 }
 
-class BaseNavigatorStateLogout extends BaseNavigatorState{
+class BaseNavigatorStateLogout extends BaseNavigatorState {
   const BaseNavigatorStateLogout() : super(const []);
 }
 
-class BaseNavigatorStateShowSnackBar extends BaseNavigatorState{
+class BaseNavigatorStateShowSnackBar extends BaseNavigatorState {
   final String message;
+
   BaseNavigatorStateShowSnackBar(this.message) : super([message]);
 }
 
-class BaseNavigatorStateShowLoading extends BaseNavigatorState{
+class BaseNavigatorStateShowLoading extends BaseNavigatorState {
   const BaseNavigatorStateShowLoading() : super(const []);
 }
 
-class BaseNavigatorStateShowLogin extends BaseNavigatorState{
-  const BaseNavigatorStateShowLogin(): super(const[]);
+class BaseNavigatorStateShowLogin extends BaseNavigatorState {
+  const BaseNavigatorStateShowLogin() : super(const []);
 }

@@ -1,5 +1,6 @@
 import 'package:tphotos/bloc/base/data/base_event.dart';
 import 'package:tphotos/ui/models/photo_list_item.dart';
+import 'package:tphotos/ui/models/timelie_group_by.dart';
 
 class TimelineEvent extends BaseEvent {
   const TimelineEvent(List<Object?> properties) : super(properties);
@@ -46,7 +47,7 @@ class TimelineEventOnCancelSelections extends TimelineEvent {
 
 class TimelineEventOnSortUpdated extends TimelineEvent {
   final List<PhotoListItem> loadedList;
-  final int zoomLevel;
+  final TimelineGroupBy zoomLevel;
 
   TimelineEventOnSortUpdated(
       {required this.loadedList, required this.zoomLevel})

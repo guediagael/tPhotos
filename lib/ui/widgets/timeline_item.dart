@@ -41,19 +41,18 @@ class TimelineItem extends StatelessWidget {
                   Center(
                       child: Padding(
                     padding:
-                        EdgeInsets.all(photoListItem.isSelected ? 20.0 : 0),
+                        EdgeInsets.all(photoListItem.isSelected ? 8.0 : 0),
                     child: PhotoSearchWidget(photoListItem: photoListItem),
                   )),
                   Positioned(
                       child: photoListItem.isSelected
                           ? const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                              size: 24,
+                              Icons.check_circle,
+                              size: 16,
                             )
                           : const Icon(
                               Icons.circle_outlined,
-                              size: 24,
+                              size: 16,
                             ))
                 ],
               ),

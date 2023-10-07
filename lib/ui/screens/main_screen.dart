@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: widget.mainActionListener.addPictureSourceSelected,
         child: const Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     ));
   }
 }

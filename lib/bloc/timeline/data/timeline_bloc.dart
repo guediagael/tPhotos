@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_data_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
 import 'package:tphotos/ui/models/photo_list_item.dart';
+import 'package:tphotos/ui/models/timelie_group_by.dart';
 
 import 'timeline_event.dart';
 import 'timeline_state.dart';
@@ -21,18 +22,17 @@ class TimelineBloc extends BaseBloc {
   }
 
   void _loadTimeline(TimelineEventLoad eventLoad, Emitter<BaseState> emitter) {
-    final groupedItems = generateMockList(1);
-    DateTime lastDate = DateTime.now().subtract(const Duration(days: 5));
+    final groupedItems = generateMockList(TimelineGroupBy.month);
     emitter(TimelineStateLoaded(
-        prevLastDate: lastDate, groupedPhotos: groupedItems));
+        groupedPhotos: groupedItems, zoomLevel: TimelineGroupBy.month));
   }
 
   void _sortTimeline(TimelineEventOnSortUpdated eventOnSortUpdated,
       Emitter<BaseState> emitter) {
-    final groupedItems = generateMockList(eventOnSortUpdated.zoomLevel);
-    DateTime lastDate = DateTime.now().subtract(const Duration(days: 5));
+    final groupedItems =
+        sortList(eventOnSortUpdated.zoomLevel, eventOnSortUpdated.loadedList);
     emitter(TimelineStateLoaded(
-        prevLastDate: lastDate, groupedPhotos: groupedItems));
+        groupedPhotos: groupedItems, zoomLevel: eventOnSortUpdated.zoomLevel));
   }
 
   void _deletePictures(TimelineEventDeletePictures eventDeletePicture,
@@ -47,10 +47,9 @@ class TimelineBloc extends BaseBloc {
       }
     }
 
-    DateTime prevDate = DateTime.now().subtract(const Duration(days: 5));
-
     emitter(TimelineStateLoaded(
-        prevLastDate: prevDate, groupedPhotos: newGroupedList));
+        groupedPhotos: newGroupedList,
+        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
   }
 
   void _dateSelected(TimelineEventOnDateItemPress eventOnDateItemPress,
@@ -76,8 +75,9 @@ class TimelineBloc extends BaseBloc {
 
     newItems[eventOnDateItemPress.newSelection] = newList;
     DateTime prevDate = DateTime.now().subtract(const Duration(days: 5));
-    emitter(
-        TimelineStateLoaded(prevLastDate: prevDate, groupedPhotos: newItems));
+    emitter(TimelineStateLoaded(
+        groupedPhotos: newItems,
+        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
   }
 
   void _imagesSelected(TimelineEventOnItemLongPress onItemLongPress,
@@ -86,7 +86,9 @@ class TimelineBloc extends BaseBloc {
         "loadedList:${onItemLongPress.loadedList}");
     debugPrint("timeline_bloc::_imagesSelected. "
         "newSelection: ${onItemLongPress.newSelection}");
-    Map<DateTime, List<PhotoListItem>> newItems = onItemLongPress.loadedList;
+    Map<DateTime, List<PhotoListItem>> newItems =
+        <DateTime, List<PhotoListItem>>{};
+    newItems.addAll(onItemLongPress.loadedList);
 
     List<PhotoListItem> newList = <PhotoListItem>[];
     DateTime key = onItemLongPress.groupDate;
@@ -102,9 +104,9 @@ class TimelineBloc extends BaseBloc {
     newList[index] = newEl;
     newItems[key] = newList;
 
-    DateTime prevDate = DateTime.now().subtract(const Duration(days: 5));
-    emitter(
-        TimelineStateLoaded(prevLastDate: prevDate, groupedPhotos: newItems));
+    emitter(TimelineStateLoaded(
+        groupedPhotos: newItems,
+        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
   }
 
   void _onCancelSelections(TimelineEventOnCancelSelections onCancelSelections,
@@ -116,71 +118,82 @@ class TimelineBloc extends BaseBloc {
         v[index] = el;
       }
     });
-    DateTime lastDate = DateTime.now().subtract(const Duration(days: 5));
     emitter(TimelineStateLoaded(
-        prevLastDate: lastDate, groupedPhotos: onCancelSelections.loadedList));
+        groupedPhotos: onCancelSelections.loadedList,
+        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
   }
 
-  static Map<DateTime, List<PhotoListItem>> generateMockList(int zoomLevel) {
-    DateTime start = DateTime.now().subtract(const Duration(days: 4));
-    DateTime end = DateTime.now();
+  static Map<DateTime, List<PhotoListItem>> generateMockList(
+      TimelineGroupBy zoomLevel) {
     Set<int> photoIds = HashSet<int>();
 
-    final groupedItems = <DateTime, List<PhotoListItem>>{};
-    var dayDiff = end.difference(start).inDays;
-    while (dayDiff > 0) {
-      final items = <PhotoListItem>[];
-      final date = DateTime.now().add(Duration(days: dayDiff));
-      for (int i = 0; i < 5; i++) {
-        int messageId = Random().nextInt(200) + Random().nextInt(100);
-        while (photoIds.contains(messageId)) {
-          messageId = Random().nextInt(200) + Random().nextInt(100);
-        }
-        photoIds.add(messageId);
+    List<DateTime> groups = [];
+    groups.add(DateTime(2022, 12, 10));
+    groups.add(DateTime(2023, 1, 14));
+    groups.add(DateTime(2023, 2, 10));
 
-        var item = PhotoListItem(
-            photoMessageId: messageId,
-            uri: "http://via.placeholder.com/200x150",
-            date: date..add(Duration(minutes: Random().nextInt(10))));
-        items.add(item);
+    final ungroupedItem = <PhotoListItem>[];
+    
+    for (int i = 0; i < groups.length; i++) {
+      DateTime start = groups[i];
+      DateTime end;
+      if (i < 2) {
+        end = groups[i + 1];
+      } else {
+        end = groups[i].add(const Duration(days: 10));
       }
-      debugPrint("Photos items $items");
-      // groupedItems["${date.year}/${date.month}/${date.day}"] = items;
-      groupedItems[date] = items;
+      var dayDiff = end.difference(start).inDays;
+      while (dayDiff > 0) {
+        final date = start.add(Duration(days: dayDiff));
+        for (int j = 0; j < 5; j++) {
+          int messageId = Random().nextInt(200) + Random().nextInt(100);
+          while (photoIds.contains(messageId)) {
+            messageId = Random().nextInt(2000) + Random().nextInt(100);
+          }
+          photoIds.add(messageId);
 
-      dayDiff--;
+          var item = PhotoListItem(
+              photoMessageId: messageId,
+              uri: "http://via.placeholder.com/200x150",
+              date: date..add(Duration(minutes: Random().nextInt(10))));
+          ungroupedItem.add(item);
+        }
+        // debugPrint("Photos items $items");
+        // groupedItems["${date.year}/${date.month}/${date.day}"] = items;
+
+        dayDiff--;
+      }
     }
-    return groupedItems;
+    return sortList(zoomLevel, ungroupedItem..sort((a, b) => b.date.compareTo(a.date)));
   }
 
   static Map<DateTime, List<PhotoListItem>> sortList(
-      int zoomLevel, List<PhotoListItem> items) {
-    DateTime start = DateTime.now().subtract(const Duration(days: 4));
-    DateTime end = DateTime.now();
-    Set<int> photoIds = HashSet<int>();
+      TimelineGroupBy zoomLevel, List<PhotoListItem> items) {
+    DateTime currentDate = items.first.date;
+    Map<DateTime, List<PhotoListItem>> result = {};
+    result[currentDate] = [];
 
-    final groupedItems = <DateTime, List<PhotoListItem>>{};
-    var dayDiff = end.difference(start).inDays;
-    while (dayDiff > 0) {
-      final items = <PhotoListItem>[];
-      final date = DateTime.now().add(Duration(days: dayDiff));
-      for (int i = 0; i < 5; i++) {
-        int messageId = Random().nextInt(200) + Random().nextInt(100);
-        while (photoIds.contains(messageId)) {
-          messageId = Random().nextInt(200) + Random().nextInt(100);
+    for (PhotoListItem item in items) {
+      if (zoomLevel == TimelineGroupBy.year) {
+        if (currentDate.year == item.date.year) {
+          result[currentDate]!.add(item);
+          continue;
         }
-        photoIds.add(messageId);
-        var item = PhotoListItem(
-            photoMessageId: messageId,
-            uri: "http://via.placeholder.com/200x150",
-            date: date..add(Duration(minutes: Random().nextInt(10))));
-        items.add(item);
+      } else if (zoomLevel == TimelineGroupBy.month) {
+        if (currentDate.month == item.date.month) {
+          result[currentDate]!.add(item);
+          continue;
+        }
+      } else {
+        if (currentDate.day == item.date.day) {
+          result[currentDate]!.add(item);
+          continue;
+        }
       }
-      // groupedItems["${date.year}/${date.month}/${date.day}"] = items;
-      groupedItems[date] = items;
-
-      dayDiff--;
+      currentDate = item.date;
+      result[currentDate] =[item];
     }
-    return groupedItems;
+
+    return result;
   }
 }

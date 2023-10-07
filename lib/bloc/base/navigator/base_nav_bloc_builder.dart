@@ -20,12 +20,25 @@ class BaseNavigatorBlocBuilder
             bloc: bloc,
             buildWhen: buildWhenCondition ??
                 (BaseNavigatorState prevState, BaseNavigatorState newState) {
-                  return (prevState != newState) ||
-                      (newState.runtimeType == bloc.initialStateType);
+                  return !isCommonNavigatorState(newState) &&
+                      ((prevState != newState) ||
+                          (newState.runtimeType == bloc.initialStateType));
                 });
 
   @override
   Widget build(BuildContext context, BaseNavigatorState state) {
     return builder(context, state);
+  }
+
+  static bool isCommonNavigatorState(BaseNavigatorState state) {
+    return (state.runtimeType == BaseNavigatorStatePop) ||
+        (state.runtimeType == BaseNavigatorStateShowSnackBar) ||
+        (state.runtimeType == BaseNavigatorStateShowActionableDialog) ||
+        (state.runtimeType == BaseNavigatorStateShowActionableErrorDialog) ||
+        (state.runtimeType == BaseNavigatorStateShowInfoDialog) ||
+        (state.runtimeType == BaseNavigatorStateShowErrorInfoDialog) ||
+        (state.runtimeType == BaseNavigatorStateShowLoading) ||
+        (state.runtimeType == BaseNavigatorStateLogout) ||
+        (state.runtimeType == BaseNavigatorStateShowLogin);
   }
 }

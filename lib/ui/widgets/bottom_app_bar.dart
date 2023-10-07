@@ -14,10 +14,11 @@ class TphotosBottomAppBar extends StatelessWidget {
       shape: const CircularNotchedRectangle(),
       // color: Colors.blue,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
               onPressed: () => onTap(0), icon:  Icon( (currentIndex == 0) ? Icons.timer : Icons.timer_outlined)),
-          const Spacer(),
+          // const Spacer(),
           IconButton(
               onPressed: () => onTap(1), icon:  Icon((currentIndex == 1)? Icons.manage_search_outlined:Icons.search ))
         ],
