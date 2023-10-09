@@ -13,10 +13,35 @@ class TimelineStateInitial extends TimelineState {
 class TimelineStateLoaded extends TimelineState {
   final Map<DateTime, List<PhotoListItem>> groupedPhotos;
   final TimelineGroupBy zoomLevel;
+  final int mediaCount;
+  final String? loadingErrorMessage;
+  final bool isLastPage;
 
-  TimelineStateLoaded({required this.groupedPhotos, required this.zoomLevel})
+  TimelineStateLoaded(
+      {required this.groupedPhotos,
+      required this.zoomLevel,
+      required this.mediaCount,
+      required this.isLastPage,
+      this.loadingErrorMessage})
       : super([
-          groupedPhotos.keys.toList(growable: false),
-          groupedPhotos.entries.toList(growable: false)
+          groupedPhotos.keys,
+          groupedPhotos.entries,
+          mediaCount,
+          loadingErrorMessage,
+          isLastPage
         ]);
+
+  TimelineStateLoaded copyWith(
+      {Map<DateTime, List<PhotoListItem>>? groupedPhotos,
+      TimelineGroupBy? zoomLevel,
+      int? mediaCount,
+      bool? isLastPage,
+      String? loadingErrorMessage}) {
+    return TimelineStateLoaded(
+        groupedPhotos: groupedPhotos ?? this.groupedPhotos,
+        zoomLevel: zoomLevel ?? this.zoomLevel,
+        mediaCount: mediaCount ?? this.mediaCount,
+        isLastPage: isLastPage ?? this.isLastPage,
+        loadingErrorMessage: loadingErrorMessage ?? this.loadingErrorMessage);
+  }
 }

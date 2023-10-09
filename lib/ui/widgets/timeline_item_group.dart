@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tphotos/ui/models/photo_list_item.dart';
 import 'package:tphotos/ui/models/timelie_group_by.dart';
 
@@ -25,9 +26,16 @@ class TimelineItemGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isSelectionActivated = photos.any((element) => element.isSelected);
-    int itemsPerLine = 5;
-    if (zoomLevel == TimelineGroupBy.month) itemsPerLine = 4;
-    if (zoomLevel == TimelineGroupBy.day) itemsPerLine = 2;
+    int itemsPerLine = 4;
+    String header = DateFormat.yMMM().format(groupDate);
+    if (zoomLevel == TimelineGroupBy.year) {
+      itemsPerLine = 5;
+      header = DateFormat.y().format(groupDate);
+    }
+    if (zoomLevel == TimelineGroupBy.day) {
+      itemsPerLine = 2;
+      header = DateFormat.yMMMEd().format(groupDate);
+    }
 
     return SliverToBoxAdapter(
       child: Column(
@@ -37,7 +45,7 @@ class TimelineItemGroup extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 0.0, top: 14),
             child: ListTile(
-              title: Text(groupDate.toString()),
+              title: Text(header),
               trailing: IconButton(
                 icon: Icon((photos.every((element) => element.isSelected))
                     ? Icons.check_circle
@@ -50,6 +58,7 @@ class TimelineItemGroup extends StatelessWidget {
           ),
           CustomScrollView(
             shrinkWrap: true,
+            primary: false,
             slivers: [
               SliverGrid.count(
                 crossAxisCount: itemsPerLine,

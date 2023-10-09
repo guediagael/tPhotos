@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/action_listeners/timeline_action_listener.dart';
@@ -109,7 +110,10 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
                 return TimelineScreen(
                   timelineActionListener: this,
                   timelinePhotos: (state as TimelineStateLoaded).groupedPhotos,
+                  mediaCount: state.mediaCount,
                   zoomLevel: state.zoomLevel,
+                  isLastPage: state.isLastPage,
+                  fetchMoreError: state.loadingErrorMessage,
                 );
               },
             ),
@@ -121,12 +125,9 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
 
   @override
   void onCancelSelection() {
-    Map<DateTime, List<PhotoListItem>> loadedPhotos =
-        (context.read<TimelineBloc>().state as TimelineStateLoaded)
-            .groupedPhotos;
     context
         .read<TimelineBloc>()
-        .add(TimelineEventOnCancelSelections(loadedPhotos));
+        .add(const TimelineEventOnCancelSelections());
   }
 
   @override
@@ -140,25 +141,16 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
             onPositiveTap: () {
               debugPrint(
                   "timeline_dispatcher::onDeleteSelection::onPositiveTap");
-              Map<DateTime, List<PhotoListItem>> loadedPhotos =
-                  (context.read<TimelineBloc>().state as TimelineStateLoaded)
-                      .groupedPhotos;
               context
                   .read<TimelineBloc>()
-                  .add(TimelineEventDeletePictures(loadedPhotos));
+                  .add(const TimelineEventDeletePictures());
             },
             onNegativeTap: () {}));
-
   }
 
   @override
   void onPhotoLongPress(PhotoListItem photoListItem, DateTime groupDate) {
-    Map<DateTime, List<PhotoListItem>> loadedPhotos =
-        (context.read<TimelineBloc>().state as TimelineStateLoaded)
-            .groupedPhotos;
-
-    context.read<TimelineBloc>().add(TimelineEventOnItemLongPress(
-        loadedList: loadedPhotos,
+    context.read<TimelineBloc>().add(TimelineEventOnItemSelected(
         newSelection: photoListItem,
         groupDate: groupDate));
   }
@@ -171,12 +163,8 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
 
   @override
   void onDatePressed(DateTime dateListItem) {
-    Map<DateTime, List<PhotoListItem>> loadedPhotos =
-        (context.read<TimelineBloc>().state as TimelineStateLoaded)
-            .groupedPhotos;
-
-    context.read<TimelineBloc>().add(TimelineEventOnDateItemPress(
-        loadedList: loadedPhotos, newSelection: dateListItem));
+    context.read<TimelineBloc>().add(TimelineEventOnDateItemSelected(
+        newSelection: dateListItem));
   }
 
   @override
@@ -186,12 +174,13 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
 
   @override
   void onSortByUpdated(newSorting) {
-    Map<DateTime, List<PhotoListItem>> loadedPhotos =
-        (context.read<TimelineBloc>().state as TimelineStateLoaded)
-            .groupedPhotos;
-
     context.read<TimelineBloc>().add(TimelineEventOnSortUpdated(
-        loadedList: loadedPhotos.values.reduce((value, element) => value..addAll(element)),
-        zoomLevel:newSorting));
+        zoomLevel: newSorting));
+  }
+
+  @override
+  void loadMore(DateTime dateTime) {
+    debugPrint("timeline_dispatcher::loadMore $dateTime");
+    context.read<TimelineBloc>().add(TimelineEventLoadMore(dateTime));
   }
 }

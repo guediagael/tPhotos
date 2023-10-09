@@ -12,44 +12,39 @@ class TimelineEventLoad extends TimelineEvent {
   TimelineEventLoad(this.initialDate) : super([initialDate]);
 }
 
-class TimelineEventDeletePictures extends TimelineEvent {
-  final Map<DateTime, List<PhotoListItem>> loadedList;
+class TimelineEventLoadMore extends TimelineEvent {
+  final DateTime initialDate;
 
-  TimelineEventDeletePictures(this.loadedList) : super([loadedList]);
+
+  TimelineEventLoadMore(this.initialDate) : super([initialDate]);
 }
 
-class TimelineEventOnItemLongPress extends TimelineEvent {
+class TimelineEventDeletePictures extends TimelineEvent {
+  const TimelineEventDeletePictures() : super(const []);
+}
+
+class TimelineEventOnItemSelected extends TimelineEvent {
   final PhotoListItem newSelection;
   final DateTime groupDate;
-  final Map<DateTime, List<PhotoListItem>> loadedList;
 
-  TimelineEventOnItemLongPress(
-      {required this.loadedList,
-      required this.newSelection,
-      required this.groupDate})
-      : super([newSelection, loadedList]);
+  TimelineEventOnItemSelected(
+      {required this.newSelection, required this.groupDate})
+      : super([newSelection, groupDate]);
 }
 
-class TimelineEventOnDateItemPress extends TimelineEvent {
+class TimelineEventOnDateItemSelected extends TimelineEvent {
   final DateTime newSelection;
-  final Map<DateTime, List<PhotoListItem>> loadedList;
 
-  TimelineEventOnDateItemPress(
-      {required this.loadedList, required this.newSelection})
-      : super([newSelection, loadedList]);
+  TimelineEventOnDateItemSelected({required this.newSelection})
+      : super([newSelection]);
 }
 
 class TimelineEventOnCancelSelections extends TimelineEvent {
-  final Map<DateTime, List<PhotoListItem>> loadedList;
-
-  TimelineEventOnCancelSelections(this.loadedList) : super([loadedList]);
+  const TimelineEventOnCancelSelections() : super(const []);
 }
 
 class TimelineEventOnSortUpdated extends TimelineEvent {
-  final List<PhotoListItem> loadedList;
   final TimelineGroupBy zoomLevel;
 
-  TimelineEventOnSortUpdated(
-      {required this.loadedList, required this.zoomLevel})
-      : super([loadedList, zoomLevel]);
+  TimelineEventOnSortUpdated({required this.zoomLevel}) : super([zoomLevel]);
 }

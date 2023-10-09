@@ -15,84 +15,128 @@ class TimelineBloc extends BaseBloc {
   TimelineBloc() : super(const TimelineStateInitial()) {
     on<TimelineEventLoad>(_loadTimeline);
     on<TimelineEventDeletePictures>(_deletePictures);
-    on<TimelineEventOnItemLongPress>(_imagesSelected);
+    on<TimelineEventOnItemSelected>(_imagesSelected);
     on<TimelineEventOnCancelSelections>(_onCancelSelections);
     on<TimelineEventOnSortUpdated>(_sortTimeline);
-    on<TimelineEventOnDateItemPress>(_dateSelected);
+    on<TimelineEventOnDateItemSelected>(_dateSelected);
+    on<TimelineEventLoadMore>(_loadMoreItems);
   }
 
   void _loadTimeline(TimelineEventLoad eventLoad, Emitter<BaseState> emitter) {
     final groupedItems = generateMockList(TimelineGroupBy.month);
     emitter(TimelineStateLoaded(
-        groupedPhotos: groupedItems, zoomLevel: TimelineGroupBy.month));
+        groupedPhotos: groupedItems.value,
+        mediaCount: groupedItems.key,
+        isLastPage: false,
+        zoomLevel: TimelineGroupBy.month));
+  }
+
+  void _loadMoreItems(
+      TimelineEventLoadMore loadMoreEvent, Emitter<BaseState> emitter) {
+    final oldList = (state as TimelineStateLoaded).groupedPhotos;
+    final zoomLevel = (state as TimelineStateLoaded).zoomLevel;
+    bool shouldLoadMore = Random().nextBool();
+    if (shouldLoadMore) {
+      final sortedNewItems = generateMore(loadMoreEvent.initialDate, zoomLevel);
+      if (((zoomLevel == TimelineGroupBy.year) &&
+              oldList.keys.last.year == sortedNewItems.key.year) ||
+          ((zoomLevel == TimelineGroupBy.month) &&
+              (oldList.keys.last.year == sortedNewItems.key.year) &&
+              (oldList.keys.last.month == sortedNewItems.key.month)) ||
+          ((zoomLevel == TimelineGroupBy.day) &&
+              (oldList.keys.last.year == sortedNewItems.key.year) &&
+              (oldList.keys.last.month == sortedNewItems.key.month) &&
+              (oldList.keys.last.day == sortedNewItems.key.day))) {
+        oldList[oldList.keys.last]!.addAll(sortedNewItems.value);
+      } else {
+        oldList.addEntries([sortedNewItems]);
+      }
+      emitter((state as TimelineStateLoaded)
+          .copyWith(groupedPhotos: oldList, isLastPage: true));
+    } else {
+      emitter((state as TimelineStateLoaded)
+          .copyWith(loadingErrorMessage: "Failed to load more"));
+    }
   }
 
   void _sortTimeline(TimelineEventOnSortUpdated eventOnSortUpdated,
       Emitter<BaseState> emitter) {
-    final groupedItems =
-        sortList(eventOnSortUpdated.zoomLevel, eventOnSortUpdated.loadedList);
-    emitter(TimelineStateLoaded(
-        groupedPhotos: groupedItems, zoomLevel: eventOnSortUpdated.zoomLevel));
+    final groupedItems = sortList(
+        eventOnSortUpdated.zoomLevel,
+        (state as TimelineStateLoaded)
+            .groupedPhotos
+            .values
+            .reduce((value, element) => value + element));
+    final newLoadedState = (state as TimelineStateLoaded).copyWith(
+        groupedPhotos: groupedItems, zoomLevel: eventOnSortUpdated.zoomLevel);
+
+    emitter(newLoadedState);
   }
 
   void _deletePictures(TimelineEventDeletePictures eventDeletePicture,
       Emitter<BaseState> emitter) {
-    final oldGroupedList = eventDeletePicture.loadedList;
+    // final oldGroupedList = eventDeletePicture.loadedList;
+    final oldGroupedList = (state as TimelineStateLoaded).groupedPhotos;
     var newGroupedList = <DateTime, List<PhotoListItem>>{};
+    int itemCount = 0;
     for (var key in oldGroupedList.keys) {
       var oldList = oldGroupedList[key];
       var newList = oldList!.where((element) => !element.isSelected);
       if (newList.isNotEmpty) {
         newGroupedList[key] = newList.toList(growable: false);
       }
+      itemCount += newList.length;
     }
 
-    emitter(TimelineStateLoaded(
-        groupedPhotos: newGroupedList,
-        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
+    final newLoadedState = (state as TimelineStateLoaded)
+        .copyWith(groupedPhotos: newGroupedList, mediaCount: itemCount);
+    emitter(newLoadedState);
   }
 
-  void _dateSelected(TimelineEventOnDateItemPress eventOnDateItemPress,
+  void _dateSelected(TimelineEventOnDateItemSelected eventOnDateItemPress,
       Emitter<BaseState> emitter) {
+    Map<DateTime, List<PhotoListItem>> loadedMedias =
+        (state as TimelineStateLoaded).groupedPhotos;
+
     debugPrint("timeline_bloc::_dateSelected. "
-        "loadedList:${eventOnDateItemPress.loadedList}");
+        "loadedList:$loadedMedias");
     debugPrint("timeline_bloc::_dateSelected. "
         "newSelection: ${eventOnDateItemPress.newSelection}");
     Map<DateTime, List<PhotoListItem>> newItems =
         <DateTime, List<PhotoListItem>>{};
-    newItems.addAll(eventOnDateItemPress.loadedList);
+    newItems.addAll(loadedMedias);
 
     List<PhotoListItem> newList = <PhotoListItem>[];
 
-    bool selection = eventOnDateItemPress
-        .loadedList[eventOnDateItemPress.newSelection]!
+    bool selection = loadedMedias[eventOnDateItemPress.newSelection]!
         .any((element) => !element.isSelected);
 
-    for (var element in eventOnDateItemPress
-        .loadedList[eventOnDateItemPress.newSelection]!) {
+    for (var element in loadedMedias[eventOnDateItemPress.newSelection]!) {
       newList.add(element.copyWith(isSelected: selection));
     }
 
     newItems[eventOnDateItemPress.newSelection] = newList;
-    DateTime prevDate = DateTime.now().subtract(const Duration(days: 5));
-    emitter(TimelineStateLoaded(
-        groupedPhotos: newItems,
-        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
+
+    final newState =
+        (state as TimelineStateLoaded).copyWith(groupedPhotos: newItems);
+    emitter(newState);
   }
 
-  void _imagesSelected(TimelineEventOnItemLongPress onItemLongPress,
-      Emitter<BaseState> emitter) {
+  void _imagesSelected(
+      TimelineEventOnItemSelected onItemLongPress, Emitter<BaseState> emitter) {
+    Map<DateTime, List<PhotoListItem>> loadedMedias =
+        (state as TimelineStateLoaded).groupedPhotos;
     debugPrint("timeline_bloc::_imagesSelected. "
-        "loadedList:${onItemLongPress.loadedList}");
+        "loadedList:$loadedMedias");
     debugPrint("timeline_bloc::_imagesSelected. "
         "newSelection: ${onItemLongPress.newSelection}");
     Map<DateTime, List<PhotoListItem>> newItems =
         <DateTime, List<PhotoListItem>>{};
-    newItems.addAll(onItemLongPress.loadedList);
+    newItems.addAll(loadedMedias);
 
     List<PhotoListItem> newList = <PhotoListItem>[];
     DateTime key = onItemLongPress.groupDate;
-    var value = onItemLongPress.loadedList[key]!;
+    var value = loadedMedias[key]!;
 
     newList.addAll(value);
     int index = value.indexOf(value.firstWhere((el) =>
@@ -104,9 +148,9 @@ class TimelineBloc extends BaseBloc {
     newList[index] = newEl;
     newItems[key] = newList;
 
-    emitter(TimelineStateLoaded(
-        groupedPhotos: newItems,
-        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
+    final newState =
+        (state as TimelineStateLoaded).copyWith(groupedPhotos: newItems);
+    emitter(newState);
   }
 
   void _onCancelSelections(TimelineEventOnCancelSelections onCancelSelections,
@@ -118,12 +162,12 @@ class TimelineBloc extends BaseBloc {
         v[index] = el;
       }
     });
-    emitter(TimelineStateLoaded(
-        groupedPhotos: onCancelSelections.loadedList,
-        zoomLevel: (state as TimelineStateLoaded).zoomLevel));
+
+    final newState = (state as TimelineStateLoaded).copyWith();
+    emitter(newState);
   }
 
-  static Map<DateTime, List<PhotoListItem>> generateMockList(
+  static MapEntry<int, Map<DateTime, List<PhotoListItem>>> generateMockList(
       TimelineGroupBy zoomLevel) {
     Set<int> photoIds = HashSet<int>();
 
@@ -133,7 +177,7 @@ class TimelineBloc extends BaseBloc {
     groups.add(DateTime(2023, 2, 10));
 
     final ungroupedItem = <PhotoListItem>[];
-    
+
     for (int i = 0; i < groups.length; i++) {
       DateTime start = groups[i];
       DateTime end;
@@ -158,13 +202,44 @@ class TimelineBloc extends BaseBloc {
               date: date..add(Duration(minutes: Random().nextInt(10))));
           ungroupedItem.add(item);
         }
-        // debugPrint("Photos items $items");
-        // groupedItems["${date.year}/${date.month}/${date.day}"] = items;
-
         dayDiff--;
       }
     }
-    return sortList(zoomLevel, ungroupedItem..sort((a, b) => b.date.compareTo(a.date)));
+    return MapEntry(
+        ungroupedItem.length,
+        sortList(zoomLevel,
+            ungroupedItem..sort((a, b) => b.date.compareTo(a.date))));
+  }
+
+  static MapEntry<DateTime, List<PhotoListItem>> generateMore(
+      DateTime dateTime, TimelineGroupBy zoomLevel) {
+    DateTime start = dateTime;
+    DateTime end = dateTime.add(const Duration(days: 3));
+    Set<int> photoIds = HashSet<int>();
+    final ungroupedItem = <PhotoListItem>[];
+
+    var dayDiff = end.difference(start).inDays;
+    while (dayDiff > 0) {
+      final date = start.add(Duration(days: dayDiff));
+      for (int j = 0; j < 5; j++) {
+        int messageId = Random().nextInt(200) + Random().nextInt(100) + 301;
+        while (photoIds.contains(messageId)) {
+          messageId = Random().nextInt(2000) + Random().nextInt(100) + 2101;
+        }
+        photoIds.add(messageId);
+
+        var item = PhotoListItem(
+            photoMessageId: messageId,
+            uri: "http://via.placeholder.com/200x150",
+            date: date..add(Duration(minutes: Random().nextInt(10))));
+        ungroupedItem.add(item);
+      }
+      dayDiff--;
+    }
+    return sortList(
+            zoomLevel, ungroupedItem..sort((a, b) => b.date.compareTo(a.date)))
+        .entries
+        .first;
   }
 
   static Map<DateTime, List<PhotoListItem>> sortList(
@@ -191,7 +266,7 @@ class TimelineBloc extends BaseBloc {
         }
       }
       currentDate = item.date;
-      result[currentDate] =[item];
+      result[currentDate] = [item];
     }
 
     return result;

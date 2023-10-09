@@ -9,4 +9,5 @@ abstract mixin class TimelineActionListener{
   void onPhotoLongPress(PhotoListItem photoListItem, DateTime groupDate);
   void onDatePressed(DateTime dateListItem);
   void onSortByUpdated(TimelineGroupBy newSorting);
+  void loadMore(DateTime dateTime);
 }
