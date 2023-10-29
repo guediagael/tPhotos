@@ -15,7 +15,6 @@ class TimelineEventLoad extends TimelineEvent {
 class TimelineEventLoadMore extends TimelineEvent {
   final DateTime initialDate;
 
-
   TimelineEventLoadMore(this.initialDate) : super([initialDate]);
 }
 
@@ -48,3 +47,14 @@ class TimelineEventOnSortUpdated extends TimelineEvent {
 
   TimelineEventOnSortUpdated({required this.zoomLevel}) : super([zoomLevel]);
 }
+
+class TimelineEventLoadFolders extends TimelineEvent {
+  TimelineEventLoadFolders() : super([]);
+}
+
+class TimelineEventFoldersUpdated extends TimelineEvent {
+  final List<String> folders;
+
+  TimelineEventFoldersUpdated(this.folders) : super([folders]);
+}
+

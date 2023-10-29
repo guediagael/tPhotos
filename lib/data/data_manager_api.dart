@@ -6,4 +6,5 @@ abstract class DataManagerApi {
   PreferencesIdApi get preferencesIdApi ;
 
   PreferencesSettingsApi get preferencesSettingsApi ;
+
 }

@@ -5,8 +5,11 @@ abstract class PreferencesSettingsApi{
   void switchDeleteAfterSave(bool on);
   void switchAutoSync(bool on);
   void updateSyncedFoldersList(List<String> folders);
+  void updateFirstLaunchFlag(bool firstLaunch);
 
   bool getAutoSyncStatus();
   bool getDeleteAfterSaveStatus();
   List<String> getSyncedFolders();
+
+  bool checkIsFirstLaunch();
 }

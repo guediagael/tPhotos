@@ -7,8 +7,10 @@ import 'search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final MainActionListener mainActionListener;
+  final bool shouldShowFab;
 
-  const MainScreen({Key? key, required this.mainActionListener})
+  const MainScreen(
+      {Key? key, required this.mainActionListener, this.shouldShowFab = false})
       : super(key: key);
 
   @override
@@ -28,29 +30,32 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: widget.mainActionListener.settingsSelected,
-              icon: const Icon(Icons.settings))
-        ],
-      ),
-      body: IndexedStack(
-        index: currentScreen,
-        children: [TimelineDispatcher.buildTimelineScreen(), SearchScreen()],
-      ),
-      bottomNavigationBar: TphotosBottomAppBar(
-          currentIndex: currentScreen,
-          onTap: (index) {
-            setState(() {
-              currentScreen = index;
-            });
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: widget.mainActionListener.addPictureSourceSelected,
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    ));
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                  onPressed: widget.mainActionListener.settingsSelected,
+                  icon: const Icon(Icons.settings))
+            ],
+          ),
+          body: IndexedStack(
+            index: currentScreen,
+            children: [
+              TimelineDispatcher.buildTimelineScreen(),
+              SearchScreen()
+            ],
+          ),
+          bottomNavigationBar: TphotosBottomAppBar(
+              currentIndex: currentScreen,
+              onTap: (index) {
+                setState(() {
+                  currentScreen = index;
+                });
+              }),
+          floatingActionButton: widget.shouldShowFab ? FloatingActionButton(
+            onPressed: widget.mainActionListener.addMediaSourceSelected,
+            child: const Icon(Icons.add),
+          ) : null,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        ));
   }
 }

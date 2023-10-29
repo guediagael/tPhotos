@@ -80,6 +80,10 @@ class BaseNavigatorShowErrorInfoDialog extends BaseNavigatorEvent {
       : super([title, errorMessage, onPositiveTap]);
 }
 
-class BaseNavigatorEventShowLogin extends BaseNavigatorEvent{
-  const BaseNavigatorEventShowLogin(): super(const[]);
+class BaseNavigatorEventShowLogin extends BaseNavigatorEvent {
+  const BaseNavigatorEventShowLogin() : super(const []);
+}
+
+class BaseNavigatorEventRequestFoldersPermissions extends BaseNavigatorEvent {
+  BaseNavigatorEventRequestFoldersPermissions() : super([]);
 }

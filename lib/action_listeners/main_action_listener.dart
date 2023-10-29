@@ -1,6 +1,6 @@
 abstract mixin class MainActionListener{
   void settingsSelected();
-  void addPictureSourceSelected();
+  void addMediaSourceSelected();
   void openGalleryForImageSelected();
   void openGalleryForVideoSelected();
 }

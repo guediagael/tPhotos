@@ -79,3 +79,7 @@ class BaseNavigatorStateShowLoading extends BaseNavigatorState {
 class BaseNavigatorStateShowLogin extends BaseNavigatorState {
   const BaseNavigatorStateShowLogin() : super(const []);
 }
+
+class BaseNavigatorStateRequestFoldersPermissions extends BaseNavigatorState {
+  BaseNavigatorStateRequestFoldersPermissions() : super([]);
+}

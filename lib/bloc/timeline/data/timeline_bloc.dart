@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_data_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
+import 'package:tphotos/data/data_manager_impl.dart';
 import 'package:tphotos/ui/models/photo_list_item.dart';
 import 'package:tphotos/ui/models/timelie_group_by.dart';
 
@@ -20,6 +21,9 @@ class TimelineBloc extends BaseBloc {
     on<TimelineEventOnSortUpdated>(_sortTimeline);
     on<TimelineEventOnDateItemSelected>(_dateSelected);
     on<TimelineEventLoadMore>(_loadMoreItems);
+
+    on<TimelineEventLoadFolders>(_onRequestPermissions);
+    on<TimelineEventFoldersUpdated>(_onFoldersUpdated);
   }
 
   void _loadTimeline(TimelineEventLoad eventLoad, Emitter<BaseState> emitter) {
@@ -270,5 +274,18 @@ class TimelineBloc extends BaseBloc {
     }
 
     return result;
+  }
+
+
+  void _onRequestPermissions(TimelineEventLoadFolders eventLoadFolders,
+      Emitter<BaseState> emitter) {}
+
+  void _onFoldersUpdated(TimelineEventFoldersUpdated eventFoldersUpdated,
+      Emitter<BaseState> emitter) {
+    DataManagerImpl.getInstance()
+        .preferencesSettingsApi
+        .updateSyncedFoldersList(eventFoldersUpdated.folders);
+
+    emitter(TimelineStateFoldersSaved());
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:tphotos/bloc/base/navigator/base_nav_event.dart';
 
 abstract class MainNavigatorEvent extends BaseNavigatorEvent {
@@ -19,18 +18,3 @@ class MainNavigatorEventShowSettings extends MainNavigatorEvent {
   const MainNavigatorEventShowSettings() : super(const []);
 }
 
-class MainNavigatorEventAddNew extends MainNavigatorEvent {
-  const MainNavigatorEventAddNew() : super(const []);
-}
-
-class MainNavigatorEventOpenGallery extends MainNavigatorEvent {
-  MainNavigatorEventOpenGallery() : super([]);
-}
-
-class MainNavigatorAddVideoFromGallery extends MainNavigatorEvent {
-  MainNavigatorAddVideoFromGallery() : super([]);
-}
-
-class MainNavigatorEventOpenCamera extends MainNavigatorEvent {
-  MainNavigatorEventOpenCamera() : super([]);
-}

@@ -1,4 +1,3 @@
-
 import 'package:tphotos/bloc/base/navigator/base_nav_state.dart';
 
 abstract class MainNavigatorState extends BaseNavigatorState {
@@ -35,6 +34,3 @@ class MainNavigatorStateShowSearch extends MainNavigatorState {
   MainNavigatorStateShowSearch() : super([]);
 }
 
-class MainNavigatorStateOpenCamera extends MainNavigatorState {
-  MainNavigatorStateOpenCamera() : super([]);
-}

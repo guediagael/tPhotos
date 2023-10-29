@@ -45,3 +45,17 @@ class TimelineStateLoaded extends TimelineState {
         loadingErrorMessage: loadingErrorMessage ?? this.loadingErrorMessage);
   }
 }
+
+class TimelineStateRequestSelectFiles extends TimelineState {
+  TimelineStateRequestSelectFiles() : super([]);
+}
+
+class TimelineStateFoldersSaved extends TimelineState {
+  TimelineStateFoldersSaved() : super([]);
+}
+
+class TimelineStateFoldersLoaded extends TimelineState {
+  final List<String> folders;
+
+  TimelineStateFoldersLoaded(this.folders) : super([folders]);
+}

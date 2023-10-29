@@ -1,9 +1,36 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tphotos/ui/widgets/dialogs/dialog_alert.dart';
 
+Future<bool> _checkImagePermission(BuildContext context) async {
+  return _checkPermission(context, Permission.photos);
+}
+
+Future<bool> _checkVideoPermission(BuildContext context) async {
+  return _checkPermission(context, Permission.videos);
+}
+
 Future<bool> checkStoragePermission(BuildContext context) async {
-  bool permissionGranted = await Permission.storage.isGranted;
+  if (Platform.isAndroid) {
+    AndroidDeviceInfo deviceInfo = await DeviceInfoPlugin().androidInfo;
+    if (deviceInfo.version.sdkInt >= 33) {
+      return _checkImagePermission(context).then((imagePermission) {
+        return _checkVideoPermission(context).then((videoPermission) {
+          return imagePermission || videoPermission;
+        });
+      });
+    }
+  }
+
+  return _checkPermission(context, Permission.storage);
+}
+
+Future<bool> _checkPermission(
+    BuildContext context, Permission permission) async {
+  bool permissionGranted = await permission.isGranted;
   if (!permissionGranted) {
     bool shouldShowRationale =
         await Permission.storage.shouldShowRequestRationale;
@@ -11,7 +38,7 @@ Future<bool> checkStoragePermission(BuildContext context) async {
       await _showRationale(
           context: context, onOkPressed: () => Navigator.of(context).pop());
     }
-    bool shouldOpenSettings = await Permission.storage.isPermanentlyDenied;
+    bool shouldOpenSettings = await permission.isPermanentlyDenied;
     if (shouldOpenSettings) {
       await _showRationale(
           context: context,
