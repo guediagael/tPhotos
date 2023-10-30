@@ -16,6 +16,8 @@ Future<bool> _checkVideoPermission(BuildContext context) async {
 Future<bool> checkStoragePermission(BuildContext context) async {
   if (Platform.isAndroid) {
     AndroidDeviceInfo deviceInfo = await DeviceInfoPlugin().androidInfo;
+    debugPrint(
+        "permissions::checkStoragePermission:: Android platform, deviceInfo $deviceInfo");
     if (deviceInfo.version.sdkInt >= 33) {
       return _checkImagePermission(context).then((imagePermission) {
         return _checkVideoPermission(context).then((videoPermission) {
@@ -30,10 +32,10 @@ Future<bool> checkStoragePermission(BuildContext context) async {
 
 Future<bool> _checkPermission(
     BuildContext context, Permission permission) async {
+  debugPrint("permissions::_checkPermission >>>>>> $permission");
   bool permissionGranted = await permission.isGranted;
   if (!permissionGranted) {
-    bool shouldShowRationale =
-        await Permission.storage.shouldShowRequestRationale;
+    bool shouldShowRationale = await permission.shouldShowRequestRationale;
     if (shouldShowRationale) {
       await _showRationale(
           context: context, onOkPressed: () => Navigator.of(context).pop());
@@ -50,13 +52,13 @@ Future<bool> _checkPermission(
             });
           });
     }
-    return _requestPermission();
+    return _requestPermission(permission);
   }
   return permissionGranted;
 }
 
-Future<bool> _requestPermission() async {
-  PermissionStatus status = await Permission.storage.request();
+Future<bool> _requestPermission(Permission permission) async {
+  PermissionStatus status = await permission.request();
   return status == PermissionStatus.granted;
 }
 

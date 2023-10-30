@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 abstract class BaseState extends Equatable {
   final List<Object?> properties;
@@ -12,7 +13,7 @@ abstract class BaseState extends Equatable {
   String toString() => '$runtimeType';
 }
 
-abstract class CommonState extends BaseState{
+abstract class CommonState extends BaseState {
   const CommonState(List<Object?> properties) : super(properties);
 }
 
@@ -37,9 +38,9 @@ class DialogLongErrorState extends CommonState {
   final Function onPositiveTap;
 
   DialogLongErrorState(
-      { this.errorMessage,
-       this.title,
-       this.positiveButtonLabel,
+      {this.errorMessage,
+      this.title,
+      this.positiveButtonLabel,
       this.closeAfterTap = true,
       this.hideCancelIcon = true,
       required this.onPositiveTap})
@@ -76,4 +77,9 @@ class ScreenErrorState extends BaseState {
 
 class SendToLoginState extends CommonState {
   SendToLoginState() : super([]);
+}
+
+class RequestPermissionState extends CommonState {
+  final Function(bool) callback;
+  RequestPermissionState(this.callback) : super([callback]);
 }

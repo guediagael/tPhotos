@@ -44,13 +44,15 @@ dependencies:
   dio: ^5.3.3
   dio_cache_interceptor: ^3.4.4
   shared_preferences: 2.2.1
-  image_picker: 1.0.4
+#  image_picker: 1.0.4
   permission_handler: 11.0.1
-  file_picker: 5.5.0
+#  file_picker: 5.5.0
   intl: ^0.18.1
-  path_provider: ^2.1.1
-  file_selector: ^1.0.1
+#  path_provider: ^2.1.1
+#  file_selector: ^1.0.1
   device_info_plus: ^9.1.0
+  filesystem_picker: ^4.0.0
+  external_path: ^1.0.3
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -145,28 +144,28 @@ class _SettingsDispatcherState extends State<SettingsDispatcher>
   }
 
   void _showFolderSelector(List<String> preselectedFolders) {
-    FilePicker.platform
-        .getDirectoryPath(
-        dialogTitle: "Please select one directory to be loaded ")
-        .then((value) {
-      if (value != null) {
-        var dir = Directory(value);
-        try {
-          var dirList = dir.list();
-          _listDirs(dirList);
-        } on Error catch (e) {
-          debugPrint(e.toString());
-          debugPrintStack(stackTrace: e.stackTrace,
-              label: "settings_dispatcher::_showFolderSelector");
-        }
-      }
-      if (value != null && !preselectedFolders.contains(value)) {
-        preselectedFolders.add(value);
-        context
-            .read<SettingsBloc>()
-            .add(SettingsEventUpdatedSyncedFolders(preselectedFolders));
-      }
-    });
+    // FilePicker.platform
+    //     .getDirectoryPath(
+    //     dialogTitle: "Please select one directory to be loaded ")
+    //     .then((value) {
+    //   if (value != null) {
+    //     var dir = Directory(value);
+    //     try {
+    //       var dirList = dir.list();
+    //       _listDirs(dirList);
+    //     } on Error catch (e) {
+    //       debugPrint(e.toString());
+    //       debugPrintStack(stackTrace: e.stackTrace,
+    //           label: "settings_dispatcher::_showFolderSelector");
+    //     }
+    //   }
+    //   if (value != null && !preselectedFolders.contains(value)) {
+    //     preselectedFolders.add(value);
+    //     context
+    //         .read<SettingsBloc>()
+    //         .add(SettingsEventUpdatedSyncedFolders(preselectedFolders));
+    //   }
+    // });
   }
 
   void _listDirs(Stream<FileSystemEntity> dirList) async {

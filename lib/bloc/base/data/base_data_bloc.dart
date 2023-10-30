@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tphotos/bloc/base/navigator/base_nav_state.dart';
 
 import 'package:tphotos/data/local/preferences/preferences_id_api.dart';
 
@@ -21,6 +24,7 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
     on<PromptAuthEvent>(_onPromptAuthEvent);
     on<SendToLoginEvent>(_onSendToLoginEvent);
     on<ShowErrorScreenEvent>(_onShowErrorScreenEvent);
+    on<FilesPermissionRequestEvent>(_onFilesPermissionRequestEvent);
   }
 
   Type get initialStateType => _initialStateType;
@@ -137,6 +141,11 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
         add(ShowErrorScreenEvent(errorMessage: message));
         break;
     }
+  }
+
+  FutureOr<void> _onFilesPermissionRequestEvent(
+      FilesPermissionRequestEvent event, Emitter<BaseState> emitter) {
+    emitter(RequestPermissionState(event.callback));
   }
 }
 

@@ -81,5 +81,6 @@ class BaseNavigatorStateShowLogin extends BaseNavigatorState {
 }
 
 class BaseNavigatorStateRequestFoldersPermissions extends BaseNavigatorState {
-  BaseNavigatorStateRequestFoldersPermissions() : super([]);
+  final Function(bool) callback;
+  BaseNavigatorStateRequestFoldersPermissions(this.callback) : super([callback]);
 }

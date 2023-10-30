@@ -55,6 +55,9 @@ class BaseBlocListener<E extends BaseEvent, S extends BaseState>
               } else if (state is SendToLoginState) {
                 debugPrint("base_bloc_listener Sending to Login");
                 navigatorBloc.add(BaseNavigatorEventLogout());
+              } else if (state is RequestPermissionState) {
+                navigatorBloc.add(BaseNavigatorEventRequestFoldersPermissions(
+                    state.callback));
               } else {
                 listener(context, state);
               }

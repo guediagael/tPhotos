@@ -85,5 +85,8 @@ class BaseNavigatorEventShowLogin extends BaseNavigatorEvent {
 }
 
 class BaseNavigatorEventRequestFoldersPermissions extends BaseNavigatorEvent {
-  BaseNavigatorEventRequestFoldersPermissions() : super([]);
+  final Function(bool) callback;
+
+  BaseNavigatorEventRequestFoldersPermissions(this.callback)
+      : super([callback]);
 }

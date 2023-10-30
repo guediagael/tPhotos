@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'base_nav_event.dart';
 import 'base_nav_state.dart';
@@ -18,6 +20,8 @@ abstract class BaseNavigatorBloc
     on<BaseNavigatorShowInfoDialog>(_onShowInfoDialog);
     on<BaseNavigatorShowErrorInfoDialog>(_onShowErrorInfoDialog);
     on<BaseNavigatorEventShowLogin>(_onShowLogin);
+    on<BaseNavigatorEventRequestFoldersPermissions>(
+        _onRequestFoldersPermissions);
   }
 
   Type get initialStateType => _initialStateType;
@@ -79,5 +83,11 @@ abstract class BaseNavigatorBloc
   void _onShowLogin(BaseNavigatorEventShowLogin eventShowLogin,
       Emitter<BaseNavigatorState> emitter) {
     emitter(const BaseNavigatorStateShowLogin());
+  }
+
+  FutureOr<void> _onRequestFoldersPermissions(
+      BaseNavigatorEventRequestFoldersPermissions event,
+      Emitter<BaseNavigatorState> emitter) {
+    emitter(BaseNavigatorStateRequestFoldersPermissions(event.callback));
   }
 }

@@ -5,8 +5,7 @@ class MainState extends BaseState {
 }
 
 class MainStateInitial extends MainState {
-  MainStateInitial():super([]);
-
+  MainStateInitial() : super([]);
 }
 
 class MainStateFirstLaunchFlagLoaded extends MainState {
@@ -15,4 +14,8 @@ class MainStateFirstLaunchFlagLoaded extends MainState {
   MainStateFirstLaunchFlagLoaded(this.isFirstLaunch) : super([isFirstLaunch]);
 }
 
+class MainStateFolderCountLoaded extends MainState {
+  final int count;
 
+  MainStateFolderCountLoaded(this.count) : super([count]);
+}

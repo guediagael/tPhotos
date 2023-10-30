@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-abstract class BaseEvent extends Equatable{
+abstract class BaseEvent extends Equatable {
   final List<Object?> properties;
 
   const BaseEvent(this.properties);
@@ -12,7 +13,7 @@ abstract class BaseEvent extends Equatable{
   String toString() => '$runtimeType';
 }
 
-abstract class CommonEvent extends BaseEvent{
+abstract class CommonEvent extends BaseEvent {
   const CommonEvent(List<Object?> properties) : super(properties);
 }
 
@@ -46,4 +47,10 @@ class PromptAuthEvent extends CommonEvent {
 
   PromptAuthEvent({required this.title, required this.message})
       : super([title, message]);
+}
+
+class FilesPermissionRequestEvent extends CommonEvent {
+  final Function(bool) callback;
+
+  FilesPermissionRequestEvent(this.callback) : super([callback]);
 }

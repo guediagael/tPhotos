@@ -4,7 +4,8 @@ import 'package:tphotos/utils/list_extension.dart';
 
 class PhotoListItem {
   final int photoMessageId;
-  final String uri;
+  final String? uri;
+  final String? localPath;
   final String? caption;
   final DateTime date;
   final StringList? tags;
@@ -15,15 +16,17 @@ class PhotoListItem {
   PhotoListItem(
       {required this.photoMessageId,
       this.caption,
-      required this.uri,
+      this.uri,
+      this.localPath,
       required this.date,
       this.isSynced = false,
       this.tags,
       this.longitude,
       this.latitude,
       this.isSelected = false})
-      : assert((latitude == null && longitude == null) ||
-            (longitude != null && latitude != null));
+      : assert((uri != null || localPath != null) &&
+            ((latitude == null && longitude == null) ||
+                (longitude != null && latitude != null)));
 
   @override
   bool operator ==(Object other) =>

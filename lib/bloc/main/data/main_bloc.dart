@@ -24,8 +24,10 @@ class MainBloc extends BaseBloc {
         .updateFirstLaunchFlag(false);
   }
 
-  FutureOr<void> _onPermissionRequested(MainEventPermissionRequested event, Emitter<BaseState> emitter) {
-    emitter(MainStateFirstLaunchFlagLoaded(false));
-
+  void _onPermissionRequested(
+      MainEventPermissionRequested event, Emitter<BaseState> emitter) {
+    List<String> syncedFolders =
+        DataManagerImpl.getInstance().preferencesSettingsApi.getSyncedFolders();
+    emitter(MainStateFolderCountLoaded(syncedFolders.length));
   }
 }

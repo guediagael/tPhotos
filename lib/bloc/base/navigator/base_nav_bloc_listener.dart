@@ -11,6 +11,7 @@ import 'package:tphotos/dispatchers/welcome_dispatcher.dart';
 import 'package:tphotos/ui/screens/loading.dart';
 import 'package:tphotos/ui/widgets/dialogs/dialog_alert.dart';
 import 'package:tphotos/ui/widgets/dialogs/dialog_binary_action.dart';
+import 'package:tphotos/utils/permissions.dart';
 
 import 'base_nav_state.dart';
 import 'base_navigator_bloc.dart';
@@ -158,6 +159,10 @@ class BaseNavigatorBlocListener<B extends BaseNavigatorBloc,
                         builder: (_) => PhoneNumberLoginDispatcher
                             .buildPhoneNumberLoginScreen()),
                     (route) => false);
+              } else if (state is BaseNavigatorStateRequestFoldersPermissions) {
+                checkStoragePermission(context).then((value) {
+                  state.callback(value);
+                });
               } else {
                 navListener(context, state);
               }
