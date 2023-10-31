@@ -15,9 +15,9 @@ import 'package:tphotos/bloc/main/data/main_event.dart';
 import 'package:tphotos/bloc/main/data/main_state.dart';
 import 'package:tphotos/bloc/main/nav/main_nav_bloc.dart';
 import 'package:tphotos/bloc/main/nav/main_nav_state.dart';
+import 'package:tphotos/dispatchers/folder_selection_dispatcher.dart';
 import 'package:tphotos/dispatchers/settings_dispatcher.dart';
 import 'package:tphotos/ui/screens/main_screen.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
 
 class MainScreenDispatcher extends StatefulWidget {
   const MainScreenDispatcher({super.key});
@@ -106,7 +106,9 @@ class _MainScreenDispatcherState extends State<MainScreenDispatcher>
   void addMediaSourceSelected() async {
     context.read<MainBloc>().add(FilesPermissionRequestEvent((value) {
       if (value) {
-        getDirs();
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) =>
+                FolderSelectionDispatcher.buildFolderSelectionScreen()));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("No Folder Selected")));
@@ -118,23 +120,5 @@ class _MainScreenDispatcherState extends State<MainScreenDispatcher>
   void settingsSelected() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => SettingsDispatcher.buildSettingScreen()));
-  }
-
-  void getDirs() async {
-    var rootDirs = await ExternalPath.getExternalStorageDirectories();
-    List<FilesystemPickerShortcut> shortcuts = [];
-    for (var element in rootDirs) {
-      shortcuts.add(
-          FilesystemPickerShortcut(name: element, path: Directory(element)));
-    }
-    FilesystemPicker.open(
-      context: context,
-      fsType: FilesystemType.folder,
-      shortcuts: shortcuts,
-    ).then((value) {
-      if (value != null && value.isNotEmpty) {
-        debugPrint("main_dispatcher::getDirs:: folder selected $value");
-      }
-    });
   }
 }

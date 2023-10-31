@@ -90,3 +90,7 @@ class BaseNavigatorEventRequestFoldersPermissions extends BaseNavigatorEvent {
   BaseNavigatorEventRequestFoldersPermissions(this.callback)
       : super([callback]);
 }
+
+class BaseNavigatorEventAddFoldersRequest extends BaseNavigatorEvent {
+  BaseNavigatorEventAddFoldersRequest() : super([]);
+}
