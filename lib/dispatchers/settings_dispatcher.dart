@@ -15,6 +15,7 @@ import 'package:tphotos/bloc/settings/data/settings_state.dart';
 import 'package:tphotos/bloc/settings/nav/settings_nav_bloc.dart';
 import 'package:tphotos/bloc/settings/nav/settings_nav_state.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
+import 'package:tphotos/dispatchers/folder_selection_dispatcher.dart';
 import 'package:tphotos/ui/screens/settings_screen.dart';
 
 class SettingsDispatcher extends StatefulWidget {
@@ -29,11 +30,9 @@ class SettingsDispatcher extends StatefulWidget {
         providers: [
           BlocProvider(create: (_) => SettingsNavigatorBloc()),
           BlocProvider(
-              create: (_) =>
-                  SettingsBloc(
-                      preferencesSettingsApi: dataManager
-                          .preferencesSettingsApi,
-                      preferencesIdApi: dataManager.preferencesIdApi))
+              create: (_) => SettingsBloc(
+                  preferencesSettingsApi: dataManager.preferencesSettingsApi,
+                  preferencesIdApi: dataManager.preferencesIdApi))
         ],
         child: SettingsDispatcher(
           key: key,
@@ -82,14 +81,39 @@ class _SettingsDispatcherState extends State<SettingsDispatcher>
   }
 
   @override
-  void onCloseSettingsPressed() {
+  void onLogoutPressed() {
     Navigator.of(context).pop();
   }
 
   @override
   void onDeleteAccount() {
     debugPrint("settings_dispatcher::onDeleteAccount");
-    // TODO: implement onDeleteAccount
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text("Deleting Account"),
+            content: const Text(
+                "This app does not hold your account information. "
+                "This account is linked to your telegram account. It will be "
+                "automatically deleted if you delete your telegram account. "
+                "If you don't want this app to access your telegram account, "
+                "simply log out"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onLogoutPressed();
+                  },
+                  child: const Text("Log out")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Close"))
+            ],
+          );
+        });
   }
 
   @override
@@ -108,9 +132,7 @@ class _SettingsDispatcherState extends State<SettingsDispatcher>
   void onSelectFolders() {
     debugPrint("settings_dispatcher::onSelectFolders");
     _showFolderSelector(
-        (context
-            .read<SettingsBloc>()
-            .state as SettingsContainerState)
+        (context.read<SettingsBloc>().state as SettingsContainerState)
             .settings
             .selectedFolders);
   }
@@ -118,9 +140,7 @@ class _SettingsDispatcherState extends State<SettingsDispatcher>
   @override
   void onSyncNowPressed() {
     debugPrint("settings_dispatcher::onSyncNowPressed");
-    context
-        .read<SettingsBloc>()
-        .add(const SettingsEventTriggerSync());
+    context.read<SettingsBloc>().add(const SettingsEventTriggerSync());
   }
 
   @override
@@ -144,28 +164,9 @@ class _SettingsDispatcherState extends State<SettingsDispatcher>
   }
 
   void _showFolderSelector(List<String> preselectedFolders) {
-    // FilePicker.platform
-    //     .getDirectoryPath(
-    //     dialogTitle: "Please select one directory to be loaded ")
-    //     .then((value) {
-    //   if (value != null) {
-    //     var dir = Directory(value);
-    //     try {
-    //       var dirList = dir.list();
-    //       _listDirs(dirList);
-    //     } on Error catch (e) {
-    //       debugPrint(e.toString());
-    //       debugPrintStack(stackTrace: e.stackTrace,
-    //           label: "settings_dispatcher::_showFolderSelector");
-    //     }
-    //   }
-    //   if (value != null && !preselectedFolders.contains(value)) {
-    //     preselectedFolders.add(value);
-    //     context
-    //         .read<SettingsBloc>()
-    //         .add(SettingsEventUpdatedSyncedFolders(preselectedFolders));
-    //   }
-    // });
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => FolderSelectionDispatcher.buildFolderSelectionScreen(
+            fromSettings: true)));
   }
 
   void _listDirs(Stream<FileSystemEntity> dirList) async {

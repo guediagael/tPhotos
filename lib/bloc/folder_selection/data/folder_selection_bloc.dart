@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:bloc/src/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_data_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
 import 'package:tphotos/bloc/folder_selection/data/folder_selection_event.dart';
 import 'package:tphotos/bloc/folder_selection/data/folder_selection_state.dart';
-import 'package:tphotos/data/data_manager_api.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
 
 class FolderSelectionBloc extends BaseBloc {

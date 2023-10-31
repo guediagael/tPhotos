@@ -6,6 +6,6 @@ abstract mixin class SettingsActionListener{
   void onFreeUpSpaceOnDevice();
   void onTermsOfServicePressed();
   void onLegalNoticePressed();
-  void onCloseSettingsPressed();
+  void onLogoutPressed();
   void onDeleteAccount();
 }

@@ -15,18 +15,20 @@ import 'package:tphotos/bloc/folder_selection/navigation/folder_selection_nav_st
 import 'package:tphotos/ui/screens/folder_selection.dart';
 
 class FolderSelectionDispatcher extends StatefulWidget {
-  const FolderSelectionDispatcher({super.key});
+  final bool fromSettings;
+
+  const FolderSelectionDispatcher({super.key, required this.fromSettings});
 
   @override
   State<StatefulWidget> createState() => FolderSelectionDispatcherState();
 
-  static Widget buildFolderSelectionScreen() {
+  static Widget buildFolderSelectionScreen({bool fromSettings = false}) {
     return MultiProvider(
       providers: [
         BlocProvider(create: (_) => FolderSelectionNavigationBloc()),
         BlocProvider(create: (_) => FolderSelectionBloc())
       ],
-      child: const FolderSelectionDispatcher(),
+      child: FolderSelectionDispatcher(fromSettings: fromSettings),
     );
   }
 }
@@ -38,6 +40,7 @@ class FolderSelectionDispatcherState extends State<FolderSelectionDispatcher>
     context
         .read<FolderSelectionBloc>()
         .add(FolderSelectionEventLoadSelection());
+
     super.didChangeDependencies();
   }
 
@@ -68,10 +71,15 @@ class FolderSelectionDispatcherState extends State<FolderSelectionDispatcher>
               builder: (ctx, state) {
                 if (state is FolderSelectionStateSelectionUpdated) {
                   return FolderSelectionScreen(
-                      selectedFolders: state.selectedFolders, listener: this);
+                    selectedFolders: state.selectedFolders,
+                    listener: this,
+                    shouldShowModelOnOpen: widget.fromSettings == false,
+                  );
                 }
                 return FolderSelectionScreen(
-                    selectedFolders: const [], listener: this);
+                    selectedFolders: const [],
+                    listener: this,
+                    shouldShowModelOnOpen: widget.fromSettings == false);
               },
             ),
           );

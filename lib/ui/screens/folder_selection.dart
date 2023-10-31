@@ -6,24 +6,26 @@ import 'package:flutter/material.dart';
 import 'package:tphotos/action_listeners/folder_selection_listener.dart';
 
 class FolderSelectionScreen extends StatefulWidget {
-  List<String> selectedFolders;
-  FolderSelectionListener listener;
+  final List<String> selectedFolders;
+  final FolderSelectionListener listener;
+  final bool shouldShowModelOnOpen;
 
-  FolderSelectionScreen(
-      {required this.selectedFolders, required this.listener, super.key});
+  const FolderSelectionScreen(
+      {required this.selectedFolders,
+      required this.listener,
+      required this.shouldShowModelOnOpen,
+      super.key});
 
   @override
   State<StatefulWidget> createState() => _FolderSelectionScreenState();
 }
 
 class _FolderSelectionScreenState extends State<FolderSelectionScreen> {
-
   @override
   void didChangeDependencies() {
-    showFolderSelection(context);
+    if (widget.shouldShowModelOnOpen) showFolderSelection(context);
     super.didChangeDependencies();
   }
-
 
   @override
   Widget build(BuildContext context) {

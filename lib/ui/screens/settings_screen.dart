@@ -26,18 +26,24 @@ class SettingsScreen extends StatelessWidget {
               background: FlutterLogo(), // User's profile picture
             ),
           ),
-          const SliverToBoxAdapter(
-            child: Text("Rounded bottom corners container"),
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(28),
+                    topRight: Radius.circular(28)),
+              ),
+            ),
           ),
           SliverList(
               delegate: SliverChildListDelegate.fixed([
             ListTile(
-              title: const Text("Delete After Save "),
-              trailing: Switch(
-                  value: settings.deleteAfterSave,
-                  onChanged: (newValue) {
-                    actionListener.updateDeleteAfterSave(newValue);
-                  }),
+              title:
+                  Text('Folders in sync(${settings.selectedFolders.length})'),
+              trailing: IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: actionListener.onSelectFolders,
+              ),
             ),
             ListTile(
               title: const Text("Auto Sync"),
@@ -48,22 +54,11 @@ class SettingsScreen extends StatelessWidget {
                   }),
             ),
             ListTile(
-              title: TextButton(
+                title: const Text("Sync now"),
+                trailing: IconButton(
+                  icon: const Icon(Icons.cloud_sync),
                   onPressed: actionListener.onSyncNowPressed,
-                  child: const Text("Sync now")),
-            ),
-            ListTile(
-              title: TextButton(
-                  onPressed: actionListener.onFreeUpSpaceOnDevice,
-                  child: const Text("Free up space on device")),
-            ),
-            ListTile(
-              title:
-                  Text('Folders in sync(${settings.selectedFolders.length})'),
-              onTap: () {
-                actionListener.onSelectFolders();
-              },
-            ),
+                )),
             const Spacer(),
             ListTile(
               title: TextButton(
@@ -75,23 +70,20 @@ class SettingsScreen extends StatelessWidget {
                   onPressed: actionListener.onLegalNoticePressed,
                   child: const Text("Legal Notice")),
             ),
-            const Spacer(
-              flex: 2,
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    actionListener.onLogoutPressed();
+                  },
+                  child: const Text("Logout")),
             ),
-            Row(
-              children: [
-                OutlinedButton(
-                    onPressed: () {
-                      actionListener.onCloseSettingsPressed();
-                    },
-                    child: const Text("Logout")),
-                TextButton(
-                    onPressed: () {
-                      actionListener.onDeleteAccount();
-                    },
-                    child: const Text("Delete Account"))
-              ],
-            )
+            TextButton(
+                onPressed: () {
+                  actionListener.onDeleteAccount();
+                },
+                child: const Text("Delete Account"))
           ]))
         ],
       ),
