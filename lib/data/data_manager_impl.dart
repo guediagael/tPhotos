@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tphotos/data/data_manager_api.dart';
+import 'package:tphotos/data/local/databases/database_impl.dart';
+import 'package:tphotos/data/local/databases/media_database_api.dart';
 import 'package:tphotos/data/local/preferences/preference_id_impl.dart';
 import 'package:tphotos/data/local/preferences/preferences_id_api.dart';
 import 'package:tphotos/data/local/preferences/preferences_settings_api.dart';
@@ -9,6 +11,7 @@ import 'package:tphotos/services/telegram.dart';
 class DataManagerImpl implements DataManagerApi {
   static late final PreferencesIdApi _preferencesIdApi;
   static late final PreferencesSettingsApi _preferencesSettingsApi;
+  static late final MediaDatabase _mediaDatabase;
 
   const DataManagerImpl._internal();
 
@@ -17,6 +20,7 @@ class DataManagerImpl implements DataManagerApi {
     _preferencesIdApi = PreferenceIdImpl(
         sharedPreferences: sharedPreferences, telegramService: telegramService);
     _preferencesSettingsApi = PreferencesSettingsImpl(sharedPreferences);
+    _mediaDatabase = await DatabaseImpl.open();
     return const DataManagerImpl._internal();
   }
 
@@ -29,4 +33,7 @@ class DataManagerImpl implements DataManagerApi {
 
   @override
   PreferencesSettingsApi get preferencesSettingsApi => _preferencesSettingsApi;
+
+  @override
+  MediaDatabase get mediaDatabase => _mediaDatabase;
 }

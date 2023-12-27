@@ -10,7 +10,7 @@ import 'package:tphotos/ui/screens/welcome_placeholder.dart';
 
 import 'color_schemes.g.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
   }
 
   Future<Map<String, dynamic>> welcomeScreenSettings() async {
+    WidgetsFlutterBinding.ensureInitialized();
     final packageInfo = await PackageInfo.fromPlatform();
     final appVersion = packageInfo.version;
 
