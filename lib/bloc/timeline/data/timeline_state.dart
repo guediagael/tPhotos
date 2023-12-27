@@ -10,6 +10,10 @@ class TimelineStateInitial extends TimelineState {
   const TimelineStateInitial() : super(const []);
 }
 
+class TimelineStateLoading extends TimelineState {
+  TimelineStateLoading() : super([]);
+}
+
 class TimelineStateLoaded extends TimelineState {
   final Map<DateTime, List<PhotoListItem>> groupedPhotos;
   final TimelineGroupBy zoomLevel;

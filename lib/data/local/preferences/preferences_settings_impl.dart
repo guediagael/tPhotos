@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tphotos/data/local/preferences/preferences_settings_api.dart';
 
@@ -43,6 +44,7 @@ class PreferencesSettingsImpl implements PreferencesSettingsApi {
 
   @override
   void updateSyncedFoldersList(List<String> folders) {
+    debugPrint("preferences_settings_impl $folders");
     sharedPreferences.setStringList(_syncedFolders, folders);
   }
 

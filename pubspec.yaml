@@ -53,6 +53,8 @@ dependencies:
   device_info_plus: ^9.1.0
   filesystem_picker: ^4.0.0
   external_path: ^1.0.3
+  mime: ^1.0.4
+  gap: ^3.0.1
 
 dev_dependencies:
   flutter_test:

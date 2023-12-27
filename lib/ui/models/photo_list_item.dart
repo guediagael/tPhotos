@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:tphotos/utils/list_extension.dart';
 
 class PhotoListItem {
-  final int photoMessageId;
+  final String photoMessageId;
   final String? uri;
   final String? localPath;
   final String? caption;
@@ -58,7 +58,7 @@ class PhotoListItem {
 
   PhotoListItem copyWith(
       {String? uri,
-      int? photoMessageId,
+      String? photoMessageId,
       String? caption,
       DateTime? date,
       bool? isSynced,

@@ -78,7 +78,7 @@ class _FolderSelectionScreenState extends State<FolderSelectionScreen> {
           FilesystemPickerShortcut(name: element, path: Directory(element)));
     }
 
-    FilesystemPicker.open(
+    FilesystemPicker.openDialog(
       context: context,
       fsType: FilesystemType.folder,
       shortcuts: shortcuts,

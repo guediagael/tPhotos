@@ -1,8 +1,10 @@
 import 'dart:collection';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mime/mime.dart';
 import 'package:tphotos/bloc/base/data/base_data_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
@@ -26,13 +28,45 @@ class TimelineBloc extends BaseBloc {
     on<TimelineEventFoldersUpdated>(_onFoldersUpdated);
   }
 
-  void _loadTimeline(TimelineEventLoad eventLoad, Emitter<BaseState> emitter) {
-    final groupedItems = generateMockList(TimelineGroupBy.month);
-    emitter(TimelineStateLoaded(
-        groupedPhotos: groupedItems.value,
-        mediaCount: groupedItems.key,
-        isLastPage: false,
-        zoomLevel: TimelineGroupBy.month));
+  Future<void> _loadTimeline(TimelineEventLoad eventLoad, Emitter<BaseState> emitter) async {
+    debugPrint("Timeline_bloc::_loadTimeline bloc: $eventLoad");
+    List<String> rootPaths =
+        DataManagerImpl.getInstance().preferencesSettingsApi.getSyncedFolders();
+    debugPrint("Timeline_bloc rootPathsIsEmpty ${rootPaths.isEmpty}");
+    if (rootPaths.isEmpty) {
+      final MapEntry<int, Map<DateTime, List<PhotoListItem>>> groupedItems =
+          generateMockList(TimelineGroupBy.month);
+      emitter(TimelineStateLoaded(
+          groupedPhotos: groupedItems.value,
+          mediaCount: groupedItems.key,
+          isLastPage: false,
+          zoomLevel: TimelineGroupBy.month));
+    } else {
+      debugPrint("Timeline_bloc rootPaths $rootPaths");
+      //TODO: have a local database for synced photos
+      debugPrint("Timeline_bloc emitter is done ${emitter.isDone}");
+      List<FileSystemEntity> files =
+          await _loadFiles(eventLoad.initialDate, rootPaths);
+      final MapEntry<int, Map<DateTime, List<PhotoListItem>>> groupedItems =
+          MapEntry(
+              files.length,
+              sortList(
+                  TimelineGroupBy.month,
+                  files
+                      .map((e) => PhotoListItem(
+                          photoMessageId: e.path,
+                          date: e.statSync().modified,
+                          localPath: e.path))
+                      .toList()));
+      debugPrint("Timeline_bloc emitter is done ${emitter.isDone}");
+      if (!emitter.isDone) {
+        emitter(TimelineStateLoaded(
+            groupedPhotos: groupedItems.value,
+            mediaCount: groupedItems.key,
+            isLastPage: true, //TODO: Remove this and add pagination
+            zoomLevel: TimelineGroupBy.month));
+      };
+    }
   }
 
   void _loadMoreItems(
@@ -201,7 +235,7 @@ class TimelineBloc extends BaseBloc {
           photoIds.add(messageId);
 
           var item = PhotoListItem(
-              photoMessageId: messageId,
+              photoMessageId: messageId.toString(),
               uri: "http://via.placeholder.com/200x150",
               date: date..add(Duration(minutes: Random().nextInt(10))));
           ungroupedItem.add(item);
@@ -233,7 +267,7 @@ class TimelineBloc extends BaseBloc {
         photoIds.add(messageId);
 
         var item = PhotoListItem(
-            photoMessageId: messageId,
+            photoMessageId: messageId.toString(),
             uri: "http://via.placeholder.com/200x150",
             date: date..add(Duration(minutes: Random().nextInt(10))));
         ungroupedItem.add(item);
@@ -248,6 +282,7 @@ class TimelineBloc extends BaseBloc {
 
   static Map<DateTime, List<PhotoListItem>> sortList(
       TimelineGroupBy zoomLevel, List<PhotoListItem> items) {
+    if (items.isEmpty) return {};
     DateTime currentDate = items.first.date;
     Map<DateTime, List<PhotoListItem>> result = {};
     result[currentDate] = [];
@@ -276,9 +311,8 @@ class TimelineBloc extends BaseBloc {
     return result;
   }
 
-
-  void _onRequestPermissions(TimelineEventLoadFolders eventLoadFolders,
-      Emitter<BaseState> emitter) {}
+  void _onRequestPermissions(
+      TimelineEventLoadFolders eventLoadFolders, Emitter<BaseState> emitter) {}
 
   void _onFoldersUpdated(TimelineEventFoldersUpdated eventFoldersUpdated,
       Emitter<BaseState> emitter) {
@@ -287,5 +321,35 @@ class TimelineBloc extends BaseBloc {
         .updateSyncedFoldersList(eventFoldersUpdated.folders);
 
     emitter(TimelineStateFoldersSaved());
+  }
+
+  Future<List<FileSystemEntity>> _loadFiles(
+      DateTime loadFrom, List<String> rootPaths) async {
+    debugPrint("timeline_bloc::_loadFiles rootPath: $rootPaths");
+    List<FileSystemEntity> result = [];
+    for(String path in rootPaths) {
+      Directory folder = Directory(path);
+      debugPrint("timeline_bloc::_loadFiles folder: $folder");
+      if(folder.existsSync()) {
+        for (FileSystemEntity fileSystemEntity
+        in folder.listSync(recursive: true)) {
+          String mimeType = lookupMimeType(fileSystemEntity.path) ?? "";
+          var value = await fileSystemEntity.stat();
+          if ((value.modified.compareTo(loadFrom) >= 0 &&
+              (value.type == FileSystemEntityType.file) &&
+              (mimeType.startsWith('image')) ||
+              (mimeType.startsWith('video')))) {
+            result.add(fileSystemEntity);
+          }
+          if (result.length > 50) {
+            return result;
+          }
+        }
+      }else{
+        debugPrint("timeline_bloc::_loadFiles folder $folder doesn't exist");
+
+      }
+    }
+    return result;
   }
 }

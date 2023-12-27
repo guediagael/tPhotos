@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/action_listeners/timeline_action_listener.dart';
@@ -94,7 +93,8 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
               builder: (BuildContext context, BaseState state) {
                 debugPrint(
                     "timeline_dispatcher::blocBuilder building new $state");
-                if (state is TimelineStateInitial) {
+                if (state is TimelineStateInitial ||
+                    state is TimelineStateLoading) {
                   return const Scaffold(
                     body: CustomScrollView(
                       shrinkWrap: true,
@@ -125,9 +125,7 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
 
   @override
   void onCancelSelection() {
-    context
-        .read<TimelineBloc>()
-        .add(const TimelineEventOnCancelSelections());
+    context.read<TimelineBloc>().add(const TimelineEventOnCancelSelections());
   }
 
   @override
@@ -151,8 +149,7 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
   @override
   void onPhotoLongPress(PhotoListItem photoListItem, DateTime groupDate) {
     context.read<TimelineBloc>().add(TimelineEventOnItemSelected(
-        newSelection: photoListItem,
-        groupDate: groupDate));
+        newSelection: photoListItem, groupDate: groupDate));
   }
 
   @override
@@ -163,8 +160,9 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
 
   @override
   void onDatePressed(DateTime dateListItem) {
-    context.read<TimelineBloc>().add(TimelineEventOnDateItemSelected(
-        newSelection: dateListItem));
+    context
+        .read<TimelineBloc>()
+        .add(TimelineEventOnDateItemSelected(newSelection: dateListItem));
   }
 
   @override
@@ -174,8 +172,9 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
 
   @override
   void onSortByUpdated(newSorting) {
-    context.read<TimelineBloc>().add(TimelineEventOnSortUpdated(
-        zoomLevel: newSorting));
+    context
+        .read<TimelineBloc>()
+        .add(TimelineEventOnSortUpdated(zoomLevel: newSorting));
   }
 
   @override

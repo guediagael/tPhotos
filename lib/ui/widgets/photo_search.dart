@@ -14,7 +14,7 @@ class PhotoSearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
         tag: photoListItem.toString(),
-        child: (photoListItem.uri != null)
+        child: (photoListItem.localPath == null)
             ? CachedNetworkImage(
                 imageUrl: photoListItem.uri!,
                 imageBuilder: (context, imageProvider) => Container(

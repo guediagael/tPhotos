@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:tphotos/action_listeners/settings_action_listener.dart';
 import 'package:tphotos/bloc/settings/data/settings.dart';
 
@@ -59,7 +60,7 @@ class SettingsScreen extends StatelessWidget {
                   icon: const Icon(Icons.cloud_sync),
                   onPressed: actionListener.onSyncNowPressed,
                 )),
-            const Spacer(),
+            const Gap(5),
             ListTile(
               title: TextButton(
                   onPressed: actionListener.onTermsOfServicePressed,
@@ -70,7 +71,7 @@ class SettingsScreen extends StatelessWidget {
                   onPressed: actionListener.onLegalNoticePressed,
                   child: const Text("Legal Notice")),
             ),
-            const Spacer(),
+            const Gap(10),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
