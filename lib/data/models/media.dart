@@ -1,4 +1,15 @@
 class Media {
+  static const messageIdField = "messageId";
+  static const mediaHashField = "mediaHash";
+  static const captionField = "caption";
+  static const mediaDateField = "mediaDate";
+  static const uploadedDateField = "uploadedDate";
+  static const tgMessageDateField = "tgMessageDate";
+  static const createdDateField = "createdDate";
+  static const fileNameField = "fileName";
+  static const filePathField = "filePath";
+  static const mimeTypeField = "mimeType";
+
   int? messageId;
   String mediaHash;
   String caption;
@@ -24,39 +35,39 @@ class Media {
 
   Map<String, dynamic> toMap() {
     return {
-      'messageId': messageId,
-      'pictureHash': mediaHash,
-      'caption': caption,
-      'mediaDate': mediaDate,
-      'uploadedDate': uploadedDate,
-      'tgMessageDate': tgMessageDate,
-      'createdDate': createdDate,
-      'fileName': fileName,
-      'filePath': filePath,
-      'mimeType': mimeType
+      messageIdField: messageId,
+      mediaHashField: mediaHash,
+      captionField: caption,
+      mediaDateField: mediaDate,
+      uploadedDateField: uploadedDate,
+      tgMessageDateField: tgMessageDate,
+      createdDateField: createdDate,
+      fileNameField: fileName,
+      filePathField: filePath,
+      mimeTypeField: mimeType
     };
   }
 
   Media.fromMap(Map<String, dynamic> mediaMap)
-      : mediaHash = mediaMap['mediaHash']!,
-        caption = mediaMap['caption']!,
-        mediaDate = mediaMap['mediaDate']!,
-        createdDate = mediaMap['createdDate']!,
-        fileName = mediaMap['fileName']!,
-        filePath = mediaMap['filePath']!,
-        mimeType = mediaMap['mimeType']!,
-        messageId = mediaMap['messageId'],
-        uploadedDate = mediaMap['uploadedDate'],
-        tgMessageDate = mediaMap['tgMessageDate'];
+      : mediaHash = mediaMap[mediaHashField]!,
+        caption = mediaMap[captionField]!,
+        mediaDate = mediaMap[mediaHashField]!,
+        createdDate = mediaMap[createdDateField]!,
+        fileName = mediaMap[fileNameField]!,
+        filePath = mediaMap[filePathField]!,
+        mimeType = mediaMap[mimeTypeField]!,
+        messageId = mediaMap[messageIdField],
+        uploadedDate = mediaMap[uploadedDateField],
+        tgMessageDate = mediaMap[tgMessageDateField];
 
   @override
   String toString() {
-    return 'Media{messageId: $messageId, mediaHash: $mediaHash, '
-        'caption: $caption, '
-        'mediaDate: ${DateTime.fromMillisecondsSinceEpoch(mediaDate)}, '
-        'uploadedDate: ${DateTime.fromMillisecondsSinceEpoch(uploadedDate ?? 0)}, '
-        'tgMessageDate: ${DateTime.fromMillisecondsSinceEpoch(tgMessageDate ?? 0)}, '
-        'createdDate: ${DateTime.fromMillisecondsSinceEpoch(createdDate)}, '
-        'fileName: $fileName, filePath: $filePath, mimeType: $mimeType}';
+    return 'Media{$messageIdField: $messageId, $mediaHashField: $mediaHash, '
+        '$captionField: $caption, '
+        '$mediaDateField: ${DateTime.fromMillisecondsSinceEpoch(mediaDate)}, '
+        '$uploadedDateField: ${DateTime.fromMillisecondsSinceEpoch(uploadedDate ?? 0)}, '
+        '$tgMessageDateField: ${DateTime.fromMillisecondsSinceEpoch(tgMessageDate ?? 0)}, '
+        '$createdDateField: ${DateTime.fromMillisecondsSinceEpoch(createdDate)}, '
+        '$fileNameField: $fileName, $filePathField: $filePath, $mimeTypeField: $mimeType}';
   }
 }

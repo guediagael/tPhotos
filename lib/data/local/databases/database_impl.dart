@@ -35,7 +35,7 @@ class DatabaseImpl extends MediaDatabase {
   Future<void> deleteMedias(List<Media> medias) async {
     for (Media media in medias) {
       await db.delete(MediaDatabase.mediaTable,
-          where: 'mediaHash = ?', whereArgs: [media.mediaHash]);
+          where: '${Media.mediaHashField} = ?', whereArgs: [media.mediaHash]);
     }
   }
 
@@ -44,8 +44,8 @@ class DatabaseImpl extends MediaDatabase {
     final List<Map<String, dynamic>> mediasMaps = await db.query(
         MediaDatabase.mediaTable,
         limit: limit,
-        orderBy: 'mediaDate',
-        where: 'date <= ?',
+        orderBy: Media.mediaDateField,
+        where: '${Media.mediaDateField} <= ?',
         whereArgs: [createdDate.millisecondsSinceEpoch]);
     return List.generate(
         mediasMaps.length, (index) => Media.fromMap(mediasMaps[index]));
@@ -55,7 +55,7 @@ class DatabaseImpl extends MediaDatabase {
   Future<void> updateMedias(List<Media> medias) async {
     for (Media media in medias) {
       await db.update(MediaDatabase.mediaTable, media.toMap(),
-          where: 'mediaHash = ?', whereArgs: [media.mediaHash]);
+          where: '${Media.mediaHashField} = ?', whereArgs: [media.mediaHash]);
     }
   }
 }
