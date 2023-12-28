@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -8,8 +9,10 @@ import 'package:mime/mime.dart';
 import 'package:tphotos/bloc/base/data/base_data_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
+import 'package:tphotos/data/models/media.dart';
 import 'package:tphotos/ui/models/photo_list_item.dart';
 import 'package:tphotos/ui/models/timelie_group_by.dart';
+import 'package:crypto/crypto.dart';
 
 import 'timeline_event.dart';
 import 'timeline_state.dart';
@@ -28,7 +31,8 @@ class TimelineBloc extends BaseBloc {
     on<TimelineEventFoldersUpdated>(_onFoldersUpdated);
   }
 
-  Future<void> _loadTimeline(TimelineEventLoad eventLoad, Emitter<BaseState> emitter) async {
+  Future<void> _loadTimeline(
+      TimelineEventLoad eventLoad, Emitter<BaseState> emitter) async {
     debugPrint("Timeline_bloc::_loadTimeline bloc: $eventLoad");
     List<String> rootPaths =
         DataManagerImpl.getInstance().preferencesSettingsApi.getSyncedFolders();
@@ -43,7 +47,6 @@ class TimelineBloc extends BaseBloc {
           zoomLevel: TimelineGroupBy.month));
     } else {
       debugPrint("Timeline_bloc rootPaths $rootPaths");
-      //TODO: have a local database for synced photos
       debugPrint("Timeline_bloc emitter is done ${emitter.isDone}");
       List<FileSystemEntity> files =
           await _loadFiles(eventLoad.initialDate, rootPaths);
@@ -65,7 +68,7 @@ class TimelineBloc extends BaseBloc {
             mediaCount: groupedItems.key,
             isLastPage: true, //TODO: Remove this and add pagination
             zoomLevel: TimelineGroupBy.month));
-      };
+      }
     }
   }
 
@@ -325,19 +328,22 @@ class TimelineBloc extends BaseBloc {
 
   Future<List<FileSystemEntity>> _loadFiles(
       DateTime loadFrom, List<String> rootPaths) async {
-    debugPrint("timeline_bloc::_loadFiles rootPath: $rootPaths");
+    debugPrint("timeline_bloc::_loadFiles from date $loadFrom in rootPath: $rootPaths");
     List<FileSystemEntity> result = [];
-    for(String path in rootPaths) {
+    for (String path in rootPaths) {
       Directory folder = Directory(path);
       debugPrint("timeline_bloc::_loadFiles folder: $folder");
-      if(folder.existsSync()) {
+      if (folder.existsSync()) {
         for (FileSystemEntity fileSystemEntity
-        in folder.listSync(recursive: true)) {
+            in folder.listSync(recursive: true)) {
+          debugPrint("timeline_bloc::_loadFiles file ${fileSystemEntity.path}");
           String mimeType = lookupMimeType(fileSystemEntity.path) ?? "";
+          debugPrint("timeline_bloc::_loadFiles file mime $mimeType");
           var value = await fileSystemEntity.stat();
-          if ((value.modified.compareTo(loadFrom) >= 0 &&
-              (value.type == FileSystemEntityType.file) &&
-              (mimeType.startsWith('image')) ||
+          debugPrint("timeline_bloc::_loadFiles file stats ${value.toString()}");
+          if ((value.modified.compareTo(loadFrom) <= 0 &&
+                  (value.type == FileSystemEntityType.file) &&
+                  (mimeType.startsWith('image')) ||
               (mimeType.startsWith('video')))) {
             result.add(fileSystemEntity);
           }
@@ -345,9 +351,8 @@ class TimelineBloc extends BaseBloc {
             return result;
           }
         }
-      }else{
+      } else {
         debugPrint("timeline_bloc::_loadFiles folder $folder doesn't exist");
-
       }
     }
     return result;

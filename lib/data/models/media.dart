@@ -51,7 +51,7 @@ class Media {
   Media.fromMap(Map<String, dynamic> mediaMap)
       : mediaHash = mediaMap[mediaHashField]!,
         caption = mediaMap[captionField]!,
-        mediaDate = mediaMap[mediaHashField]!,
+        mediaDate = mediaMap[mediaDateField]!,
         createdDate = mediaMap[createdDateField]!,
         fileName = mediaMap[fileNameField]!,
         filePath = mediaMap[filePathField]!,

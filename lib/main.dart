@@ -5,12 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
 import 'package:tphotos/dispatchers/main_dispatcher.dart';
+import 'package:tphotos/services/media_sync_service.dart';
 import 'package:tphotos/services/telegram.dart';
 import 'package:tphotos/ui/screens/welcome_placeholder.dart';
 
 import 'color_schemes.g.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeService();
   runApp(const MyApp());
 }
 
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       home: FutureBuilder(
-        future: welcomeScreenSettings(),
+        future: appInitSettings(),
         builder: (ctx, AsyncSnapshot<Map<String, dynamic>> screenSettings) {
           if (screenSettings.hasData) {
             // final datas = screenSettings.data!;
@@ -45,7 +48,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Future<Map<String, dynamic>> welcomeScreenSettings() async {
+  static Future<Map<String, dynamic>> appInitSettings() async {
     WidgetsFlutterBinding.ensureInitialized();
     final packageInfo = await PackageInfo.fromPlatform();
     final appVersion = packageInfo.version;

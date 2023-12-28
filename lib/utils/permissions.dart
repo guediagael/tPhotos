@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tphotos/ui/widgets/dialogs/dialog_alert.dart';
 
-Future<bool> _checkImagePermission(BuildContext context) async {
+Future<bool> _checkImagePermission(BuildContext? context) async {
   return _checkPermission(context, Permission.photos);
 }
 
-Future<bool> _checkVideoPermission(BuildContext context) async {
+Future<bool> _checkVideoPermission(BuildContext? context) async {
   return _checkPermission(context, Permission.videos);
 }
 
-Future<bool> checkStoragePermission(BuildContext context) async {
+Future<bool> checkStoragePermission(BuildContext? context) async {
   if (Platform.isAndroid) {
     AndroidDeviceInfo deviceInfo = await DeviceInfoPlugin().androidInfo;
     debugPrint(
@@ -31,9 +31,12 @@ Future<bool> checkStoragePermission(BuildContext context) async {
 }
 
 Future<bool> _checkPermission(
-    BuildContext context, Permission permission) async {
+    BuildContext? context, Permission permission) async {
   debugPrint("permissions::_checkPermission >>>>>> $permission");
   bool permissionGranted = await permission.isGranted;
+  if (context == null) {
+    return permissionGranted;
+  }
   if (!permissionGranted) {
     bool shouldShowRationale = await permission.shouldShowRequestRationale;
     if (shouldShowRationale) {

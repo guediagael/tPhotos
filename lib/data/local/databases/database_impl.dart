@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tphotos/data/local/databases/media_database_api.dart';
 import 'package:tphotos/data/models/media.dart';
@@ -14,10 +15,17 @@ class DatabaseImpl extends MediaDatabase {
     String mediaDbPath = join(dbPath, databaseFile);
     Database database =
         await openDatabase(mediaDbPath, onCreate: (db, version) {
-      return db.execute(
-          'CREATE TABLE medias (messageId INTEGER, mediaHash TEXT NOT NULL UNIQUE PRIMARY KEY, '
-          'caption TEXT NOT NULL, mediaDate INTEGER NOT NULL, uploadedDate INTEGER, tgMessageDate INTEGER, '
-          'createdDate INTEGER NOT NULL, fileName TEXT NOT NULL, filePath TEXT NOT NULL, mimetype TEXT NOT NULL)');
+      return db.execute('CREATE TABLE ${MediaDatabase.mediaTable} '
+          '(${Media.messageIdField} INTEGER, '
+          '${Media.mediaHashField} TEXT NOT NULL UNIQUE PRIMARY KEY, '
+          '${Media.captionField} TEXT NOT NULL, '
+          '${Media.mediaDateField} INTEGER NOT NULL, '
+          '${Media.uploadedDateField} INTEGER, '
+          '${Media.tgMessageDateField} INTEGER, '
+          '${Media.createdDateField} INTEGER NOT NULL, '
+          '${Media.fileNameField} TEXT NOT NULL, '
+          '${Media.filePathField} TEXT NOT NULL, '
+          '${Media.mimeTypeField} TEXT NOT NULL)');
     }, version: 1);
 
     return DatabaseImpl(database);
@@ -26,8 +34,10 @@ class DatabaseImpl extends MediaDatabase {
   @override
   Future<void> addMedias(List<Media> medias) async {
     for (Media media in medias) {
-      await db.insert(MediaDatabase.mediaTable, media.toMap(),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      debugPrint("database_impl::addMedias adding media:  $media");
+      int added = await db.insert(MediaDatabase.mediaTable, media.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.ignore);
+      debugPrint("database_impl::addMedias  media $media added $added");
     }
   }
 
@@ -40,7 +50,7 @@ class DatabaseImpl extends MediaDatabase {
   }
 
   @override
-  Future<List<Media>> loadMedias(DateTime createdDate, [int limit = 20]) async {
+  Future<List<Media>> loadMedias(DateTime createdDate, {int limit = 20}) async {
     final List<Map<String, dynamic>> mediasMaps = await db.query(
         MediaDatabase.mediaTable,
         limit: limit,
@@ -49,6 +59,26 @@ class DatabaseImpl extends MediaDatabase {
         whereArgs: [createdDate.millisecondsSinceEpoch]);
     return List.generate(
         mediasMaps.length, (index) => Media.fromMap(mediasMaps[index]));
+  }
+
+  @override
+  Future<List<Media>> loadUploadQueue(int limit, {int offset = 0}) async {
+    final List<Map<String, dynamic>> mediasMaps = await db.rawQuery(
+        'SELECT * '
+        'FROM ${MediaDatabase.mediaTable} WHERE ${Media.uploadedDateField} '
+        'IS NULL ORDER BY ${Media.uploadedDateField} DESC LIMIT ? OFFSET ? ',
+        [limit, offset]);
+    return List.generate(
+        mediasMaps.length, (index) => Media.fromMap(mediasMaps[index]));
+  }
+
+  @override
+  Future<int> countQueue() async {
+    return db
+        .rawQuery(
+            'SELECT COUNT(*) as queue FROM ${MediaDatabase.mediaTable} WHERE'
+            ' ${Media.uploadedDateField} IS NULL')
+        .then((value) => value[0]['queue'] as int);
   }
 
   @override
