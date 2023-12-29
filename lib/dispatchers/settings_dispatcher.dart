@@ -81,6 +81,7 @@ class _SettingsDispatcherState extends State<SettingsDispatcher>
 
   @override
   void onLogoutPressed() {
+    //TODO: clear cache and log out of telegram
     Navigator.of(context).pop();
   }
 

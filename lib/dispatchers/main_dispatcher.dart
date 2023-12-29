@@ -88,9 +88,13 @@ class _MainScreenDispatcherState extends State<MainScreenDispatcher>
                   return MainScreen(
                     mainActionListener: this,
                     shouldShowFab: state.count == 0,
+                    timelineKeyValue: state.filesChecksum,
                   );
                 }
-                return MainScreen(mainActionListener: this);
+                return MainScreen(
+                  mainActionListener: this,
+                  timelineKeyValue: "",
+                );
               },
             ),
           );
@@ -103,9 +107,13 @@ class _MainScreenDispatcherState extends State<MainScreenDispatcher>
   void addMediaSourceSelected() async {
     context.read<MainBloc>().add(FilesPermissionRequestEvent((value) {
       if (value) {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (ctx) =>
-                FolderSelectionDispatcher.buildFolderSelectionScreen()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(
+                builder: (ctx) =>
+                    FolderSelectionDispatcher.buildFolderSelectionScreen()))
+            .then((value) {
+          checkForFolderSyncUpdates();
+        });
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("No Folder Selected")));
@@ -115,7 +123,15 @@ class _MainScreenDispatcherState extends State<MainScreenDispatcher>
 
   @override
   void settingsSelected() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => SettingsDispatcher.buildSettingScreen()));
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (ctx) => SettingsDispatcher.buildSettingScreen()))
+        .then((value) {
+      checkForFolderSyncUpdates();
+    });
+  }
+
+  void checkForFolderSyncUpdates() {
+    context.read<MainBloc>().add(MainEventCheckUpdatedRootPaths());
   }
 }

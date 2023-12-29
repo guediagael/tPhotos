@@ -11,3 +11,7 @@ class MainEventCheckFirstLaunchFlag extends MainEvent {
 class MainEventPermissionRequested extends MainEvent {
   MainEventPermissionRequested() : super([]);
 }
+
+class MainEventCheckUpdatedRootPaths extends MainEvent {
+  MainEventCheckUpdatedRootPaths() : super([]);
+}

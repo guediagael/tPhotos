@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_data_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
@@ -84,9 +85,14 @@ class FolderSelectionBloc extends BaseBloc {
         .where((dir) => !dirs.contains(dir.parent))
         .map((e) => e.path)
         .toList();
-    DataManagerImpl.getInstance()
-        .preferencesSettingsApi
-        .updateSyncedFoldersList(finalFolders);
+
+    Set<String> previousList = Set.from(DataManagerImpl.getInstance().preferencesSettingsApi.getSyncedFolders());
+    if(!setEquals(previousList, Set.from(finalFolders))) {
+      DataManagerImpl
+          .getInstance()
+          .preferencesSettingsApi
+          .updateSyncedFoldersList(finalFolders);
+    }
     emitter(FolderSelectionStateSaved());
   }
 }

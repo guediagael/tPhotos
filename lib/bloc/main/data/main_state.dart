@@ -16,6 +16,8 @@ class MainStateFirstLaunchFlagLoaded extends MainState {
 
 class MainStateFolderCountLoaded extends MainState {
   final int count;
+  final String filesChecksum;
 
-  MainStateFolderCountLoaded(this.count) : super([count]);
+  MainStateFolderCountLoaded({required this.count, required this.filesChecksum})
+      : super([count]);
 }

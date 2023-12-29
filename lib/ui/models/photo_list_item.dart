@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:tphotos/utils/list_extension.dart';
 
 class PhotoListItem {
-  final String photoMessageId;
+  final String? photoMessageId;
   final String? uri;
   final String? localPath;
   final String? caption;
@@ -14,7 +14,7 @@ class PhotoListItem {
   final bool isSynced;
 
   PhotoListItem(
-      {required this.photoMessageId,
+      {this.photoMessageId,
       this.caption,
       this.uri,
       this.localPath,
@@ -39,7 +39,8 @@ class PhotoListItem {
           latitude == other.latitude &&
           longitude == other.longitude &&
           photoMessageId == other.photoMessageId &&
-          caption == other.caption;
+          caption == other.caption &&
+          localPath == other.localPath;
 
   @override
   int get hashCode =>
@@ -49,11 +50,17 @@ class PhotoListItem {
       latitude.hashCode ^
       longitude.hashCode ^
       photoMessageId.hashCode ^
-      caption.hashCode;
+      caption.hashCode ^
+      localPath.hashCode;
 
   @override
   String toString() {
-    return 'PhotoListItem{messageId:$photoMessageId, caption:$caption, uri: $uri, date: $date, latitude: $latitude, longitude: $longitude, isSelected $isSelected, isSynced: $isSynced}';
+    return 'PhotoListItem{'
+        'messageId:$photoMessageId, '
+        'caption:$caption, uri: $uri, '
+        'date: $date, latitude: $latitude, '
+        'longitude: $longitude, isSelected $isSelected, '
+        'isSynced: $isSynced, localPath: $localPath}';
   }
 
   PhotoListItem copyWith(
@@ -65,7 +72,8 @@ class PhotoListItem {
       StringList? tags,
       double? longitude,
       double? latitude,
-      bool? isSelected}) {
+      bool? isSelected,
+      String? localPath}) {
     return PhotoListItem(
         uri: uri ?? this.uri,
         date: date ?? this.date,
@@ -75,6 +83,7 @@ class PhotoListItem {
         latitude: latitude ?? this.latitude,
         longitude: longitude ?? this.longitude,
         photoMessageId: photoMessageId ?? this.photoMessageId,
-        caption: caption ?? this.caption);
+        caption: caption ?? this.caption,
+        localPath: localPath ?? this.localPath);
   }
 }

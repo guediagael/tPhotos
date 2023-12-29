@@ -8,10 +8,13 @@ import 'search_screen.dart';
 class MainScreen extends StatefulWidget {
   final MainActionListener mainActionListener;
   final bool shouldShowFab;
+  final String timelineKeyValue;
 
   const MainScreen(
-      {Key? key, required this.mainActionListener, this.shouldShowFab = false})
-      : super(key: key);
+      {super.key,
+      required this.mainActionListener,
+      this.shouldShowFab = false,
+      required this.timelineKeyValue});
 
   @override
   State<StatefulWidget> createState() => _MainScreenState();
@@ -30,32 +33,35 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                  onPressed: widget.mainActionListener.settingsSelected,
-                  icon: const Icon(Icons.settings))
-            ],
-          ),
-          body: IndexedStack(
-            index: currentScreen,
-            children: [
-              TimelineDispatcher.buildTimelineScreen(),
-              SearchScreen()
-            ],
-          ),
-          bottomNavigationBar: TphotosBottomAppBar(
-              currentIndex: currentScreen,
-              onTap: (index) {
-                setState(() {
-                  currentScreen = index;
-                });
-              }),
-          floatingActionButton: widget.shouldShowFab ? FloatingActionButton(
-            onPressed: widget.mainActionListener.addMediaSourceSelected,
-            child: const Icon(Icons.add),
-          ) : null,
-          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        ));
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: widget.mainActionListener.settingsSelected,
+              icon: const Icon(Icons.settings))
+        ],
+      ),
+      body: IndexedStack(
+        index: currentScreen,
+        children: [
+          TimelineDispatcher.buildTimelineScreen(
+              key: Key("TimelineDispatcher ${widget.timelineKeyValue}")),
+          SearchScreen()
+        ],
+      ),
+      bottomNavigationBar: TphotosBottomAppBar(
+          currentIndex: currentScreen,
+          onTap: (index) {
+            setState(() {
+              currentScreen = index;
+            });
+          }),
+      floatingActionButton: widget.shouldShowFab
+          ? FloatingActionButton(
+              onPressed: widget.mainActionListener.addMediaSourceSelected,
+              child: const Icon(Icons.add),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+    ));
   }
 }

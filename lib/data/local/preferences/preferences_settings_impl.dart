@@ -8,6 +8,7 @@ class PreferencesSettingsImpl implements PreferencesSettingsApi {
   static const String _autoSyncKey = "autoSync";
   static const String _syncedFolders = "autoSyncFolders";
   static const String _firstLaunchFlag = "firstLaunch";
+  static const String _foldersUpdated = "foldersUpdated";
 
   const PreferencesSettingsImpl(this.sharedPreferences);
 
@@ -26,6 +27,7 @@ class PreferencesSettingsImpl implements PreferencesSettingsApi {
   void switchDeleteAfterSave(bool on) {
     sharedPreferences.setBool(_deleteAfterSaveKey, on);
   }
+
 
   @override
   bool getAutoSyncStatus() {
@@ -46,6 +48,7 @@ class PreferencesSettingsImpl implements PreferencesSettingsApi {
   void updateSyncedFoldersList(List<String> folders) {
     debugPrint("preferences_settings_impl $folders");
     sharedPreferences.setStringList(_syncedFolders, folders);
+    sharedPreferences.setBool(_foldersUpdated, true);
   }
 
   @override
@@ -56,6 +59,16 @@ class PreferencesSettingsImpl implements PreferencesSettingsApi {
   @override
   void updateFirstLaunchFlag(bool firstLaunch) {
     sharedPreferences.setBool(_firstLaunchFlag, firstLaunch);
+  }
+
+  @override
+  void updateFoldersUpdatesFlag(bool updated) {
+    sharedPreferences.setBool(_foldersUpdated, updated);
+  }
+
+  @override
+  bool checkFoldersUpdatedFlag() {
+    return sharedPreferences.getBool(_foldersUpdated) ?? false;
   }
 
 }

@@ -57,7 +57,7 @@ class TimelineBloc extends BaseBloc {
                   TimelineGroupBy.month,
                   files
                       .map((e) => PhotoListItem(
-                          photoMessageId: e.path,
+                          // photoMessageId: e.path,
                           date: e.statSync().modified,
                           localPath: e.path))
                       .toList()));

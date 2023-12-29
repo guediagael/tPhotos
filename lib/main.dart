@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
     final tgHash = keys['telegram_api_hash'];
     final tgAppId = keys['telegram_app_id'];
 
-    DataManagerImpl.init(TelegramService(
+    await DataManagerImpl.init(TelegramService(
         appVersion: appVersion, applicationId: tgAppId, apiHash: tgHash));
     return {"tgApiHash": tgHash, "tgAppId": tgAppId, "appVersion": appVersion};
   }

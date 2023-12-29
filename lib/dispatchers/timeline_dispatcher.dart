@@ -74,6 +74,10 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
             navigatorBloc: context.read<TimelineNavigatorBloc>(),
             listener: (context, state) {
               debugPrint("timeline_dispatcher::bloclistener $state");
+              if (state is TimelineStateLoaded) {
+                debugPrint(
+                    "timeline_dispatcher::bloclistener loaded ${state.groupedPhotos}");
+              }
             },
             child: BaseBlocBuilder(
               bloc: context.read<TimelineBloc>(),
@@ -93,6 +97,10 @@ class _TimelineDispatcherState extends State<TimelineDispatcher>
               builder: (BuildContext context, BaseState state) {
                 debugPrint(
                     "timeline_dispatcher::blocBuilder building new $state");
+                if (state is TimelineStateLoaded) {
+                  debugPrint(
+                      "timeline_dispatcher::blocBuilder building new ${state.groupedPhotos}");
+                }
                 if (state is TimelineStateInitial ||
                     state is TimelineStateLoading) {
                   return const Scaffold(
