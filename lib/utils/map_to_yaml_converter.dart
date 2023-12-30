@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:yaml/yaml.dart';
 
 class YamlConverter {
@@ -7,7 +8,7 @@ class YamlConverter {
       final yamlMap = YamlMap.wrap(data);
       yamlString = prettyYamlString(yamlMap);
     } catch (e) {
-      print('Error converting map to YAML: $e');
+      debugPrint('YamlConverter::mapToYaml Error converting map to YAML: $e');
     }
     return yamlString;
   }
@@ -18,14 +19,15 @@ class YamlConverter {
       if (yamlDoc is YamlMap) {
         return _parseYamlMap(yamlDoc);
       } else {
-        print('Invalid YAML format. Expected a YAML map.');
+        debugPrint(
+            'YamlConverter::yamlToMap Invalid YAML format. Expected a YAML map.');
       }
     } catch (e) {
-      print('Error converting YAML to map: $e');
+      debugPrint('YamlConverter::yamlToMap Error converting YAML to map: $e');
+      debugPrintStack();
     }
     return {};
   }
-
 
   static String prettyYamlString(YamlMap yamlMap) {
     final buffer = StringBuffer();
