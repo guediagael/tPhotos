@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
   static Future<Map<String, dynamic>> appInitSettings() async {
     WidgetsFlutterBinding.ensureInitialized();
     final packageInfo = await PackageInfo.fromPlatform();
+
     final appVersion = packageInfo.version;
 
     final keysFile = await rootBundle.loadString('secrets/keys.json');

@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tphotos/data/data_manager_api.dart';
 import 'package:tphotos/data/local/databases/database_impl.dart';
@@ -12,6 +13,7 @@ class DataManagerImpl implements DataManagerApi {
   static late final PreferencesIdApi _preferencesIdApi;
   static late final PreferencesSettingsApi _preferencesSettingsApi;
   static late final MediaDatabase _mediaDatabase;
+  static late final FirebaseAnalytics _firebaseAnalytics;
 
   const DataManagerImpl._internal();
 
@@ -21,6 +23,7 @@ class DataManagerImpl implements DataManagerApi {
         sharedPreferences: sharedPreferences, telegramService: telegramService);
     _preferencesSettingsApi = PreferencesSettingsImpl(sharedPreferences);
     _mediaDatabase = await DatabaseImpl.open();
+    _firebaseAnalytics = FirebaseAnalytics.instance;
     return const DataManagerImpl._internal();
   }
 
@@ -36,4 +39,7 @@ class DataManagerImpl implements DataManagerApi {
 
   @override
   MediaDatabase get mediaDatabase => _mediaDatabase;
+
+  @override
+  FirebaseAnalytics get firebaseAnalyticsInstance => _firebaseAnalytics;
 }
