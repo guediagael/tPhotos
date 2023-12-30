@@ -14,7 +14,7 @@ class DatabaseImpl extends MediaDatabase {
     String dbPath = await getDatabasesPath();
     String mediaDbPath = join(dbPath, databaseFile);
     Database database =
-        await openDatabase(mediaDbPath, onCreate: (db, version) {
+    await openDatabase(mediaDbPath, onCreate: (db, version) {
       return db.execute('CREATE TABLE ${MediaDatabase.mediaTable} '
           '(${Media.messageIdField} INTEGER, '
           '${Media.mediaHashField} TEXT NOT NULL UNIQUE PRIMARY KEY, '
@@ -25,7 +25,8 @@ class DatabaseImpl extends MediaDatabase {
           '${Media.createdDateField} INTEGER NOT NULL, '
           '${Media.fileNameField} TEXT NOT NULL, '
           '${Media.filePathField} TEXT NOT NULL, '
-          '${Media.mimeTypeField} TEXT NOT NULL)');
+          '${Media.mimeTypeField} TEXT NOT NULL, '
+          '${Media.syncAllowedField} INTEGER NOT NULL DEFAULT 1)');
     }, version: 1);
 
     return DatabaseImpl(database);
@@ -50,6 +51,14 @@ class DatabaseImpl extends MediaDatabase {
   }
 
   @override
+  Future<void> unSyncMedias(List<Media> medias) async {
+    for (Media media in medias) {
+      await db.update(MediaDatabase.mediaTable, media.toMap(),
+          where: '${Media.mediaDateField} = ?', whereArgs: [media.mediaHash]);
+    }
+  }
+
+  @override
   Future<List<Media>> loadMedias(DateTime createdDate, {int limit = 20}) async {
     final List<Map<String, dynamic>> mediasMaps = await db.query(
         MediaDatabase.mediaTable,
@@ -65,8 +74,9 @@ class DatabaseImpl extends MediaDatabase {
   Future<List<Media>> loadUploadQueue(int limit, {int offset = 0}) async {
     final List<Map<String, dynamic>> mediasMaps = await db.rawQuery(
         'SELECT * '
-        'FROM ${MediaDatabase.mediaTable} WHERE ${Media.uploadedDateField} '
-        'IS NULL ORDER BY ${Media.uploadedDateField} DESC LIMIT ? OFFSET ? ',
+            'FROM ${MediaDatabase.mediaTable} WHERE ${Media.uploadedDateField} '
+            'IS NULL ORDER BY ${Media
+            .uploadedDateField} DESC LIMIT ? OFFSET ? ',
         [limit, offset]);
     return List.generate(
         mediasMaps.length, (index) => Media.fromMap(mediasMaps[index]));
@@ -76,7 +86,7 @@ class DatabaseImpl extends MediaDatabase {
   Future<int> countQueue() async {
     return db
         .rawQuery(
-            'SELECT COUNT(*) as queue FROM ${MediaDatabase.mediaTable} WHERE'
+        'SELECT COUNT(*) as queue FROM ${MediaDatabase.mediaTable} WHERE'
             ' ${Media.uploadedDateField} IS NULL')
         .then((value) => value[0]['queue'] as int);
   }

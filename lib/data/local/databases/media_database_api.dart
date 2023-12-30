@@ -8,4 +8,5 @@ abstract class MediaDatabase{
   Future<List<Media>> loadMedias(DateTime createdDate, {int limit});
   Future<List<Media>> loadUploadQueue(int limit, {int offset});
   Future<int> countQueue();
+  Future<void> unSyncMedias(List<Media> medias);
 }

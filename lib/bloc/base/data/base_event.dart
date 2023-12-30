@@ -15,6 +15,7 @@ abstract class BaseEvent extends Equatable {
 
 abstract class CommonEvent extends BaseEvent {
   const CommonEvent(List<Object?> properties) : super(properties);
+
 }
 
 class ShowDialogEvent extends CommonEvent {
@@ -36,6 +37,7 @@ class ShowErrorScreenEvent extends CommonEvent {
   final String errorMessage;
 
   ShowErrorScreenEvent({required this.errorMessage}) : super([errorMessage]);
+
 }
 
 class SendToLoginEvent extends CommonEvent {

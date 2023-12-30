@@ -9,6 +9,7 @@ class Media {
   static const fileNameField = "fileName";
   static const filePathField = "filePath";
   static const mimeTypeField = "mimeType";
+  static const syncAllowedField = "syncAllowed";
 
   int? messageId;
   String mediaHash;
@@ -20,6 +21,7 @@ class Media {
   String fileName;
   String filePath;
   String mimeType;
+  bool syncAllowed;
 
   Media(
       {required this.mediaHash,
@@ -31,7 +33,8 @@ class Media {
       required this.mimeType,
       this.messageId,
       this.uploadedDate,
-      this.tgMessageDate});
+      this.tgMessageDate,
+      this.syncAllowed = true});
 
   Map<String, dynamic> toMap() {
     return {
@@ -44,7 +47,8 @@ class Media {
       createdDateField: createdDate,
       fileNameField: fileName,
       filePathField: filePath,
-      mimeTypeField: mimeType
+      mimeTypeField: mimeType,
+      syncAllowedField: syncAllowed
     };
   }
 
@@ -58,7 +62,8 @@ class Media {
         mimeType = mediaMap[mimeTypeField]!,
         messageId = mediaMap[messageIdField],
         uploadedDate = mediaMap[uploadedDateField],
-        tgMessageDate = mediaMap[tgMessageDateField];
+        tgMessageDate = mediaMap[tgMessageDateField],
+        syncAllowed = mediaMap[syncAllowedField] ==1;
 
   @override
   String toString() {
@@ -68,6 +73,7 @@ class Media {
         '$uploadedDateField: ${DateTime.fromMillisecondsSinceEpoch(uploadedDate ?? 0)}, '
         '$tgMessageDateField: ${DateTime.fromMillisecondsSinceEpoch(tgMessageDate ?? 0)}, '
         '$createdDateField: ${DateTime.fromMillisecondsSinceEpoch(createdDate)}, '
-        '$fileNameField: $fileName, $filePathField: $filePath, $mimeTypeField: $mimeType}';
+        '$fileNameField: $fileName, $filePathField: $filePath, $mimeTypeField: $mimeType,'
+        '$syncAllowedField: $syncAllowed}';
   }
 }

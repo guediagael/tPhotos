@@ -12,7 +12,6 @@ import 'base_state.dart';
 
 abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
   var closed = false;
-  BaseEvent? currentEvent; //TODO: remove code smell
   final PreferencesIdApi? preferencesIdApi;
   final Type _initialStateType;
 
@@ -30,7 +29,6 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
   Type get initialStateType => _initialStateType;
 
   void _commonEvent(CommonEvent event, Emitter<BaseState> baseEventEmitter) {
-    currentEvent = event;
     //TODO:
   }
 
@@ -69,7 +67,7 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
     final state = ScreenErrorState(
         errorMessage: event.errorMessage,
         onRetryPressed: () {
-          if (currentEvent != null) add(currentEvent!);
+          //TODO:
         });
     screenErrorStateEmitter(state);
   }
@@ -89,7 +87,7 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
     if (error.type == DioExceptionType.connectionTimeout ||
         error.type == DioExceptionType.receiveTimeout ||
         error.type == DioExceptionType.sendTimeout) {
-      _addErrorToBloc("Connection Time Out : " + error.message!, errorViewType,
+      _addErrorToBloc("Connection Time Out : ${error.message!}", errorViewType,
           "Network Error");
     } else if (error.type == DioExceptionType.badResponse) {
       debugPrint("dio error request ${error.requestOptions.path} \n");
@@ -121,7 +119,7 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
           er += '$key : $value\n';
         });
       } else {
-        er += "Error : ${(error as Error).toString()}";
+        er += "Error : ${(error).toString()}";
       }
       _addErrorToBloc(er, errorViewType, "Oops 😥");
     }
