@@ -349,9 +349,11 @@ class TimelineBloc extends BaseBloc {
                   (mimeType.startsWith('image')) ||
               (mimeType.startsWith('video')))) {
             result.add(fileSystemEntity);
-            var existData  = await readExifFromFile(File(fileSystemEntity.path));
-            debugPrint(
-                "timeline_bloc::_loadFiles file exif ${existData}");
+            if (kDebugMode) {
+              var exifData =
+                  await readExifFromFile(File(fileSystemEntity.path));
+              debugPrint("timeline_bloc::_loadFiles file exif $exifData");
+            }
           }
           if (result.length > 50) {
             return result;
