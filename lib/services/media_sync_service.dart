@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:crypto/crypto.dart';
+import 'package:exif/exif.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -10,6 +11,7 @@ import 'package:mime/mime.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
 import 'package:tphotos/data/models/media.dart';
 import 'package:tphotos/main.dart';
+import 'package:tphotos/utils/map_to_yaml_converter.dart';
 import 'package:tphotos/utils/permissions.dart';
 
 const String _notificationChannelId = "tPhotos";
@@ -176,22 +178,33 @@ Future<bool> _localSync(List<String> paths) async {
         if ((value.type == FileSystemEntityType.file) &&
                 (mimeType.startsWith('image')) ||
             (mimeType.startsWith('video'))) {
+          String? exifData  = await _loadExifDate(element.path);
           Digest digest = sha256.convert(File(element.path).readAsBytesSync());
           Media newMedia = Media(
               mediaHash: digest.toString(),
-              caption: "TODO",
-              //TODO: add EXIFF data
+              caption: "",
               mediaDate: value.modified.millisecondsSinceEpoch,
               createdDate: DateTime.now().millisecondsSinceEpoch,
               fileName: element.path.split('/').last,
               filePath: element.path,
-              mimeType: mimeType);
+              mimeType: mimeType, exifData: exifData);
           DataManagerImpl.getInstance().mediaDatabase.addMedias([newMedia]);
         }
       });
     }
   }
   return count == paths.length;
+}
+
+Future<String?> _loadExifDate(String filePath) async{
+  try{
+    Map<String,Object?> exifData=  await readExifFromFile(File(filePath));
+    return YamlConverter.mapToYaml(exifData);
+  }catch(e){
+    debugPrint("Error loading exif data $e");
+    debugPrintStack();
+    return null;
+  }
 }
 
 Future<bool> _uploadQueue(ServiceInstance service,

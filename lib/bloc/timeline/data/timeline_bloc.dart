@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:exif/exif.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mime/mime.dart';
@@ -328,7 +329,8 @@ class TimelineBloc extends BaseBloc {
 
   Future<List<FileSystemEntity>> _loadFiles(
       DateTime loadFrom, List<String> rootPaths) async {
-    debugPrint("timeline_bloc::_loadFiles from date $loadFrom in rootPath: $rootPaths");
+    debugPrint(
+        "timeline_bloc::_loadFiles from date $loadFrom in rootPath: $rootPaths");
     List<FileSystemEntity> result = [];
     for (String path in rootPaths) {
       Directory folder = Directory(path);
@@ -340,12 +342,16 @@ class TimelineBloc extends BaseBloc {
           String mimeType = lookupMimeType(fileSystemEntity.path) ?? "";
           debugPrint("timeline_bloc::_loadFiles file mime $mimeType");
           var value = await fileSystemEntity.stat();
-          debugPrint("timeline_bloc::_loadFiles file stats ${value.toString()}");
+          debugPrint(
+              "timeline_bloc::_loadFiles file stats ${value.toString()}");
           if ((value.modified.compareTo(loadFrom) <= 0 &&
                   (value.type == FileSystemEntityType.file) &&
                   (mimeType.startsWith('image')) ||
               (mimeType.startsWith('video')))) {
             result.add(fileSystemEntity);
+            var existData  = await readExifFromFile(File(fileSystemEntity.path));
+            debugPrint(
+                "timeline_bloc::_loadFiles file exif ${existData}");
           }
           if (result.length > 50) {
             return result;

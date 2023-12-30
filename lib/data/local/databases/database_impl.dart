@@ -26,7 +26,8 @@ class DatabaseImpl extends MediaDatabase {
           '${Media.fileNameField} TEXT NOT NULL, '
           '${Media.filePathField} TEXT NOT NULL, '
           '${Media.mimeTypeField} TEXT NOT NULL, '
-          '${Media.syncAllowedField} INTEGER NOT NULL DEFAULT 1)');
+          '${Media.syncAllowedField} INTEGER NOT NULL DEFAULT 1,'
+          '${Media.exifDataField} TEXT)');
     }, version: 1);
 
     return DatabaseImpl(database);
