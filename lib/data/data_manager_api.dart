@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:tphotos/data/local/databases/media_database_api.dart';
 import 'package:tphotos/data/local/preferences/preferences_id_api.dart';
 import 'package:tphotos/data/local/preferences/preferences_settings_api.dart';
@@ -12,7 +11,7 @@ abstract class DataManagerApi {
 
   MediaDatabase get mediaDatabase;
 
-  FirebaseAnalytics get firebaseAnalyticsInstance;
+  // FirebaseAnalytics get firebaseAnalyticsInstance;
 
   TelegramApiHelper get telegramApiHelper;
 }
