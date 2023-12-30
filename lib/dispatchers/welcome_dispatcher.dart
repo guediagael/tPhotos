@@ -26,8 +26,7 @@ class WelcomeDispatcher extends StatefulWidget {
       this.systemLanguage,
       this.systemVersion,
       this.deviceModel,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   State<StatefulWidget> createState() => _WelcomeDispatcherState();

@@ -1,6 +1,6 @@
+import 'package:tdlib/td_api.dart';
 import 'package:tphotos/data/remote/api/telegram_api_helper.dart';
 import 'package:tphotos/services/telegram.dart';
-import 'package:tdlib/td_api.dart';
 
 class TelegramHelperImplementation extends TelegramApiHelper {
   final TelegramService telegramService;
@@ -8,14 +8,14 @@ class TelegramHelperImplementation extends TelegramApiHelper {
   TelegramHelperImplementation(this.telegramService);
 
   @override
-  void fetchPictureIds(
+  void fetchMediaIds(
       {required Function errorCallback, required Function successCallback}) {
     // TODO: implement fetchPictures
     throw UnimplementedError();
   }
 
   @override
-  void downloadPicture(
+  void downloadMedia(
       {required int pictureId,
       required Function(TdError p1) errorCallback,
       required Function successCallback}) {
@@ -52,14 +52,14 @@ class TelegramHelperImplementation extends TelegramApiHelper {
   }
 
   @override
-  void uploadPictures(
-      {required List<File> imageFiles,
+  void uploadMedia(
+      {required List<File> mediaFiles,
       required int chatId,
       required Function errorCallback,
       required Function successCallback}) {
-    assert(imageFiles.length < 33);
-    for (int fileX = 0; fileX < imageFiles.length; fileX++) {
-      File file = imageFiles[fileX];
+    assert(mediaFiles.length < 33);
+    for (int fileX = 0; fileX < mediaFiles.length; fileX++) {
+      File file = mediaFiles[fileX];
       final inputMessageContent = InputMessagePhoto(
           photo: InputFileLocal(path: file.local.path),
           addedStickerFileIds: [],

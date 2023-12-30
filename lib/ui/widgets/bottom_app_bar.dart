@@ -5,8 +5,7 @@ class TphotosBottomAppBar extends StatelessWidget {
   final int currentIndex;
 
   const TphotosBottomAppBar(
-      {Key? key, required this.onTap, this.currentIndex = 0})
-      : super(key: key);
+      {super.key, required this.onTap, this.currentIndex = 0});
 
   @override
   Widget build(BuildContext context) {

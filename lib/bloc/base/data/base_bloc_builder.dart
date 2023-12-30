@@ -9,15 +9,12 @@ class BaseBlocBuilder extends BlocBuilder<BaseBloc, BaseState> {
   final Function? onRetry;
 
   BaseBlocBuilder(
-      {Key? key,
-      required BaseBloc bloc,
+      {super.key,
+      required BaseBloc super.bloc,
       this.buildWhenCondition,
-      required BlocWidgetBuilder<BaseState> builder,
+      required super.builder,
       this.onRetry})
       : super(
-            key: key,
-            builder: builder,
-            bloc: bloc,
             buildWhen: buildWhenCondition ??
                 (BaseState prevState, BaseState newState) {
                   return !isCommonState(newState) &&

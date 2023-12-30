@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -10,10 +9,8 @@ import 'package:mime/mime.dart';
 import 'package:tphotos/bloc/base/data/base_data_bloc.dart';
 import 'package:tphotos/bloc/base/data/base_state.dart';
 import 'package:tphotos/data/data_manager_impl.dart';
-import 'package:tphotos/data/models/media.dart';
 import 'package:tphotos/ui/models/photo_list_item.dart';
 import 'package:tphotos/ui/models/timelie_group_by.dart';
-import 'package:crypto/crypto.dart';
 
 import 'timeline_event.dart';
 import 'timeline_state.dart';

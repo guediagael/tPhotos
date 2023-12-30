@@ -7,8 +7,7 @@ class DialogChoice extends StatelessWidget {
   final String? body;
 
   const DialogChoice(
-      {Key? key, required this.choices, required this.title, this.body})
-      : super(key: key);
+      {super.key, required this.choices, required this.title, this.body});
 
   @override
   Widget build(BuildContext context) {

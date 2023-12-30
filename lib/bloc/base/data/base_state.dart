@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 abstract class BaseState extends Equatable {
   final List<Object?> properties;
@@ -14,7 +13,7 @@ abstract class BaseState extends Equatable {
 }
 
 abstract class CommonState extends BaseState {
-  const CommonState(List<Object?> properties) : super(properties);
+  const CommonState(super.properties);
 }
 
 class SendErrorState extends CommonState {
@@ -56,15 +55,10 @@ class DialogLongErrorState extends CommonState {
 
 class DialogSessionExpired extends DialogLongErrorState {
   DialogSessionExpired(
-      {required String errorMessage,
-      required String title,
-      required String positiveButtonLabel,
-      required Function onPositiveTap})
-      : super(
-            errorMessage: errorMessage,
-            title: title,
-            positiveButtonLabel: positiveButtonLabel,
-            onPositiveTap: onPositiveTap);
+      {required String super.errorMessage,
+      required String super.title,
+      required String super.positiveButtonLabel,
+      required super.onPositiveTap});
 }
 
 class ScreenErrorState extends BaseState {

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/bloc/base/navigator/base_nav_state.dart';
 import 'package:tphotos/bloc/base/navigator/base_navigator_bloc.dart';

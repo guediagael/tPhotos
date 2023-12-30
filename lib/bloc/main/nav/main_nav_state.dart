@@ -1,7 +1,7 @@
 import 'package:tphotos/bloc/base/navigator/base_nav_state.dart';
 
 abstract class MainNavigatorState extends BaseNavigatorState {
-  const MainNavigatorState(List<Object?> props) : super(props);
+  const MainNavigatorState(super.props);
 }
 
 class MainNavigatorStateShowSettings extends MainNavigatorState {

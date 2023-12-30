@@ -1,7 +1,7 @@
 import 'package:tphotos/bloc/base/data/base_state.dart';
 
 abstract class PasswordLoginState extends BaseState {
-  const PasswordLoginState(List<Object?> properties) : super(properties);
+  const PasswordLoginState(super.properties);
 }
 
 class PasswordLoginStateInitial extends PasswordLoginState {

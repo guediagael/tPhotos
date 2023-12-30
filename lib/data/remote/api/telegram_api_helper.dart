@@ -11,17 +11,17 @@ abstract class TelegramApiHelper {
       required Function(TdError) errorCallback,
       required Function successCallback});
 
-  void uploadPictures(
-      {required List<File> imageFiles,
+  void uploadMedia(
+      {required List<File> mediaFiles,
         required int chatId,
       required Function(TdError) errorCallback,
       required Function successCallback});
 
-  void fetchPictureIds(
+  void fetchMediaIds(
       {required Function(TdError) errorCallback,
       required Function successCallback});
 
-  void downloadPicture(
+  void downloadMedia(
       {required int pictureId, required Function(TdError) errorCallback,
       required Function successCallback});
 }

@@ -8,13 +8,12 @@ class DialogBinaryAction extends StatelessWidget {
   final Function onNegativePress;
 
   const DialogBinaryAction(
-      {Key? key,
+      {super.key,
       required this.alertMessage,
       required this.alertTitle,
       required this.onNegativePress,
       required this.onPositivePress,
-      this.titleColor})
-      : super(key: key);
+      this.titleColor});
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +40,5 @@ class DialogBinaryAction extends StatelessWidget {
             child: const Text("Ok"))
       ],
     );
-    ;
   }
 }

@@ -8,13 +8,12 @@ class SelectedPhotosMenu extends StatelessWidget {
   final Function? onAddToAlbum;
 
   const SelectedPhotosMenu(
-      {Key? key,
+      {super.key,
       required this.count,
       required this.onCancel,
       required this.onDeleteSelection,
       this.onShare,
-      this.onAddToAlbum})
-      : super(key: key);
+      this.onAddToAlbum});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:tphotos/bloc/base/data/base_state.dart';
 
 abstract class PhoneNumberLoginState extends BaseState {
-  const PhoneNumberLoginState(List<Object?> properties) : super(properties);
+  const PhoneNumberLoginState(super.properties);
 }
 
 class PhoneNumberLoginStateInitial extends PhoneNumberLoginState {

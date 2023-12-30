@@ -11,15 +11,12 @@ import 'base_event.dart';
 class BaseBlocListener<E extends BaseEvent, S extends BaseState>
     extends BlocListener with CopyableWidget {
   BaseBlocListener(
-      {Key? key,
-      required BaseBloc bloc,
+      {super.key,
+      required BaseBloc super.bloc,
       required BaseNavigatorBloc navigatorBloc,
       required BlocWidgetListener<S> listener,
-      Widget? child})
+      super.child})
       : super(
-            key: key,
-            bloc: bloc,
-            child: child,
             listener: (context, state) {
               debugPrint("base_bloc_listener::listener().state $state");
               if (state is SendErrorState) {

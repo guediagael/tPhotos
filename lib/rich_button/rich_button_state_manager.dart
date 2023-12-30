@@ -6,10 +6,10 @@ class RichButton extends InheritedWidget {
   final RichButtonState newState;
 
   const RichButton(
-      {Key? key,
+      {super.key,
       required Widget buttonFacesBuilder,
       this.newState = RichButtonState.initial})
-      : super(key: key, child: buttonFacesBuilder);
+      : super(child: buttonFacesBuilder);
 
   @override
   bool updateShouldNotify(RichButton oldWidget) {

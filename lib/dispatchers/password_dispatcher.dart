@@ -37,7 +37,8 @@ class PasswordDispatcher extends StatefulWidget {
 
 class _PasswordDispatcherState extends State<PasswordDispatcher>
     with PasswordActionListener {
-  late RichButtonState _sendPasswordichButtonState = RichButtonState.initial;
+  late final RichButtonState _sendPasswordRichButtonState =
+      RichButtonState.initial;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -64,7 +65,7 @@ class _PasswordDispatcherState extends State<PasswordDispatcher>
               builder: (context, state) {
                 return PasswordScreen(
                     passwordActionListener: this,
-                    buttonState: _sendPasswordichButtonState,
+                    buttonState: _sendPasswordRichButtonState,
                     formKey: _formKey);
               },
             ),

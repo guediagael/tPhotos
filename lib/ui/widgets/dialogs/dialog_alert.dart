@@ -7,11 +7,10 @@ class DialogAlert extends StatelessWidget {
   final Color? titleColor;
 
   const DialogAlert(
-      {Key? key,
+      {super.key,
       required this.alertMessage,
       required this.onOkayPressed,
-      required this.alertTitle, this.titleColor})
-      : super(key: key);
+      required this.alertTitle, this.titleColor});
 
   @override
   Widget build(BuildContext context) {

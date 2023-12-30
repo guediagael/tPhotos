@@ -1,8 +1,7 @@
-
 import 'package:tphotos/bloc/base/data/base_state.dart';
 
 abstract class WelcomeState extends BaseState {
-  const WelcomeState(List<Object?> properties) : super(properties);
+  const WelcomeState(super.properties);
 }
 
 class WelcomeStateInitial extends WelcomeState {
@@ -15,4 +14,8 @@ class WelcomeStateTokenValid extends WelcomeState {
 
 class WelcomeStateTokenInvalid extends WelcomeState {
   const WelcomeStateTokenInvalid() : super(const []);
+}
+
+class WelcomeStateOpenLoginScreen extends WelcomeState {
+  const WelcomeStateOpenLoginScreen() : super(const []);
 }

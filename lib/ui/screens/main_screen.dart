@@ -45,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           TimelineDispatcher.buildTimelineScreen(
               key: Key("TimelineDispatcher ${widget.timelineKeyValue}")),
-          SearchScreen()
+          const SearchScreen()
         ],
       ),
       bottomNavigationBar: TphotosBottomAppBar(

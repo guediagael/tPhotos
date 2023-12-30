@@ -13,7 +13,7 @@ class RichButtonBuilder extends StatefulWidget {
   final Function? onLongClick;
 
   const RichButtonBuilder({
-    Key? key,
+    super.key,
     this.activatedStateWidget,
     required this.initialStateWidget,
     this.deactivatedStateWidget,
@@ -21,8 +21,7 @@ class RichButtonBuilder extends StatefulWidget {
     this.loadingStateWidget,
     this.onClick,
     this.onLongClick,
-  })  : assert(onClick != null || onLongClick != null),
-        super(key: key);
+  })  : assert(onClick != null || onLongClick != null);
 
   @override
   State<StatefulWidget> createState() => _RichButtonBuilderState();

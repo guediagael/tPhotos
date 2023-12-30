@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 abstract class BaseEvent extends Equatable {
   final List<Object?> properties;
@@ -14,7 +13,7 @@ abstract class BaseEvent extends Equatable {
 }
 
 abstract class CommonEvent extends BaseEvent {
-  const CommonEvent(List<Object?> properties) : super(properties);
+  const CommonEvent(super.properties);
 
 }
 

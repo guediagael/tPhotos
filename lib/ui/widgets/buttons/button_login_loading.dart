@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ButtonLoginLoading extends StatelessWidget {
-  const ButtonLoginLoading({Key? key}) : super(key: key);
+  const ButtonLoginLoading({super.key});
 
   @override
   Widget build(BuildContext context) {

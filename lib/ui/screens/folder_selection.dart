@@ -78,16 +78,18 @@ class _FolderSelectionScreenState extends State<FolderSelectionScreen> {
           FilesystemPickerShortcut(name: element, path: Directory(element)));
     }
 
-    FilesystemPicker.openDialog(
-      context: context,
-      fsType: FilesystemType.folder,
-      shortcuts: shortcuts,
-    ).then((value) {
-      if (value != null && value.isNotEmpty) {
-        debugPrint(
-            "folder_selection::showFolderSelection:: folder selected $value");
-        widget.listener.onFolderSelected(value, widget.selectedFolders);
-      }
-    });
+    if (context.mounted) {
+      FilesystemPicker.openDialog(
+        context: context,
+        fsType: FilesystemType.folder,
+        shortcuts: shortcuts,
+      ).then((value) {
+        if (value != null && value.isNotEmpty) {
+          debugPrint(
+              "folder_selection::showFolderSelection:: folder selected $value");
+          widget.listener.onFolderSelected(value, widget.selectedFolders);
+        }
+      });
+    }
   }
 }

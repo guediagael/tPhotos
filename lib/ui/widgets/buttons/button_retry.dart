@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ButtonRetry extends StatelessWidget {
   final Function onRetry;
 
-  const ButtonRetry({Key? key, required this.onRetry}) : super(key: key);
+  const ButtonRetry({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

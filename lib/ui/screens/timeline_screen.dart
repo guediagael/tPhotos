@@ -16,14 +16,13 @@ class TimelineScreen extends StatelessWidget {
   final ScrollController _scrollController = ScrollController();
 
   TimelineScreen(
-      {Key? key,
+      {super.key,
       required this.timelineActionListener,
       required this.mediaCount,
       required this.timelinePhotos,
       required this.zoomLevel,
       required this.isLastPage,
-      this.fetchMoreError})
-      : super(key: key);
+      this.fetchMoreError});
 
   @override
   Widget build(BuildContext context) {

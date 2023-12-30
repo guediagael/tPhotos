@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 abstract class BaseNavigatorState extends Equatable {
+  @override
   final List<Object?> props;
 
   const BaseNavigatorState(this.props);

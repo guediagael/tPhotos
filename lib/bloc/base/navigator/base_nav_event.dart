@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'base_nav_state.dart';
 
 abstract class BaseNavigatorEvent extends Equatable {
+  @override
   final List<Object?> props;
 
   const BaseNavigatorEvent(this.props);

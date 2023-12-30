@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlaceHolderWelcomeScreen extends StatelessWidget {
-  const PlaceHolderWelcomeScreen({Key? key}) : super(key: key);
+  const PlaceHolderWelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

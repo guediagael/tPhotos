@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:tphotos/utils/list_extension.dart';
 
 class PhotoListItem {

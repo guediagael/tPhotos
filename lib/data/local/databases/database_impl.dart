@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tphotos/data/local/databases/media_database_api.dart';
 import 'package:tphotos/data/models/media.dart';
-import 'package:path/path.dart';
 
 class DatabaseImpl extends MediaDatabase {
   final Database db;

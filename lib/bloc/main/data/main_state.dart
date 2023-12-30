@@ -1,7 +1,7 @@
 import 'package:tphotos/bloc/base/data/base_state.dart';
 
 class MainState extends BaseState {
-  const MainState(List<Object?> properties) : super(properties);
+  const MainState(super.properties);
 }
 
 class MainStateInitial extends MainState {

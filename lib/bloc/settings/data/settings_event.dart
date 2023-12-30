@@ -2,7 +2,7 @@
 import 'package:tphotos/bloc/base/data/base_event.dart';
 
 abstract class SettingsEvent extends BaseEvent {
-  const SettingsEvent(List<Object?> properties) : super(properties);
+  const SettingsEvent(super.properties);
 }
 
 class SettingsEventUpdateDeleteAfterSave extends SettingsEvent {

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +25,7 @@ class OtpDispatcher extends StatefulWidget {
 }
 
 class _OtpDispatcherState extends State<OtpDispatcher> with OtpActionListener {
-  RichButtonState _richButtonState = RichButtonState.initial;
+  final RichButtonState _richButtonState = RichButtonState.initial;
   final _formKey = GlobalKey<FormState>();
 
   @override

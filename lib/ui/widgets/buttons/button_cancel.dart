@@ -4,7 +4,7 @@ class ButtonCancel extends StatelessWidget {
 
   final Function onCancel;
 
-  const ButtonCancel({Key? key, required this.onCancel}) : super(key: key);
+  const ButtonCancel({super.key, required this.onCancel});
 
   @override
   Widget build(BuildContext context) {

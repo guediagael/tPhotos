@@ -3,18 +3,14 @@ import 'package:tphotos/bloc/base/data/base_state.dart';
 import 'settings.dart';
 
 abstract class SettingsState extends BaseState {
-  const SettingsState(List<Object?> properties) : super(properties);
+  const SettingsState(super.properties);
 }
 
 class SettingStateInitial extends SettingsContainerState {
   SettingStateInitial(
-      {required Settings settings,
-      required String username,
-      String? profilePicture})
-      : super(
-            settings: settings,
-            username: username,
-            profilePicture: profilePicture);
+      {required super.settings,
+      required super.username,
+      super.profilePicture});
 }
 
 class SettingsContainerState extends SettingsState {

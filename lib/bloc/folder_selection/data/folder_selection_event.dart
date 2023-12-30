@@ -1,7 +1,7 @@
 import 'package:tphotos/bloc/base/data/base_event.dart';
 
 class FolderSelectionEvent extends BaseEvent {
-  const FolderSelectionEvent(List<Object?> properties) : super(properties);
+  const FolderSelectionEvent(super.properties);
 }
 
 class FolderSelectionEventNewFolderSelected extends FolderSelectionEvent {

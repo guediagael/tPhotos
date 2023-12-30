@@ -1,8 +1,7 @@
 import 'package:tphotos/bloc/base/navigator/base_nav_state.dart';
 
 class FolderSelectionNavigationState extends BaseNavigatorState {
-  const FolderSelectionNavigationState(List<Object?> properties)
-      : super(properties);
+  const FolderSelectionNavigationState(super.properties);
 }
 
 class FolderSelectionNavigationStateInitial

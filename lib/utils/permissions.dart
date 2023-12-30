@@ -19,15 +19,18 @@ Future<bool> checkStoragePermission(BuildContext? context) async {
     debugPrint(
         "permissions::checkStoragePermission:: Android platform, deviceInfo $deviceInfo");
     if (deviceInfo.version.sdkInt >= 33) {
-      return _checkImagePermission(context).then((imagePermission) {
-        return _checkVideoPermission(context).then((videoPermission) {
-          return imagePermission || videoPermission;
-        });
-      });
+      // ignore: use_build_context_synchronously
+      var imagePermissions = await _checkImagePermission(context);
+      // ignore: use_build_context_synchronously
+      var videoPermission = await _checkVideoPermission(context);
+      return imagePermissions || videoPermission;
     }
   }
 
-  return _checkPermission(context, Permission.storage);
+  if (context != null && context.mounted) {
+    return _checkPermission(context, Permission.storage);
+  }
+  return false;
 }
 
 Future<bool> _checkPermission(
@@ -40,23 +43,28 @@ Future<bool> _checkPermission(
   if (!permissionGranted) {
     bool shouldShowRationale = await permission.shouldShowRequestRationale;
     if (shouldShowRationale) {
-      await _showRationale(
-          context: context, onOkPressed: () => Navigator.of(context).pop());
+      if (context.mounted) {
+        await _showRationale(
+            context: context, onOkPressed: () => Navigator.of(context).pop());
+      }
     }
     bool shouldOpenSettings = await permission.isPermanentlyDenied;
     if (shouldOpenSettings) {
-      await _showRationale(
-          context: context,
-          onOkPressed: () {
-            openAppSettings().then((value) {
-              if (value != false) {
-                return false;
-              }
+      if (context.mounted) {
+        await _showRationale(
+            context: context,
+            onOkPressed: () {
+              openAppSettings().then((value) {
+                if (value != false) {
+                  return false;
+                }
+              });
             });
-          });
+      }
     }
     return _requestPermission(permission);
   }
+
   return permissionGranted;
 }
 
@@ -67,12 +75,14 @@ Future<bool> _requestPermission(Permission permission) async {
 
 Future<void> _showRationale(
     {required Function onOkPressed, required context}) async {
-  return showDialog(
-      context: context,
-      builder: (ctx) => DialogAlert(
-            alertMessage:
-                "This app needs to write photos to your device to function correctly",
-            onOkayPressed: onOkPressed,
-            alertTitle: "Storage Permission",
-          ));
+  if (context.mounted) {
+    return showDialog(
+        context: context,
+        builder: (ctx) => DialogAlert(
+              alertMessage:
+                  "This app needs to write photos to your device to function correctly",
+              onOkayPressed: onOkPressed,
+              alertTitle: "Storage Permission",
+            ));
+  }
 }

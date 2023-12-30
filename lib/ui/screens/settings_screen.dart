@@ -8,8 +8,7 @@ class SettingsScreen extends StatelessWidget {
   final Settings settings;
 
   const SettingsScreen(
-      {Key? key, required this.actionListener, required this.settings})
-      : super(key: key);
+      {super.key, required this.actionListener, required this.settings});
 
   @override
   Widget build(BuildContext context) {

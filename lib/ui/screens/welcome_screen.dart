@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tphotos/action_listeners/welcome_action_listener.dart';
 import 'package:tphotos/rich_button/rich_button_builder.dart';
 import 'package:tphotos/rich_button/rich_button_state_manager.dart';
@@ -13,8 +12,7 @@ class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen(
       {required this.welcomeActionListener,
       required this.richButtonState,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   static Widget buildWelcomeScreen(
       {required BuildContext context,

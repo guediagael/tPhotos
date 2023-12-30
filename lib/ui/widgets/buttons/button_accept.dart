@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ButtonAccept extends StatelessWidget {
   final Function onPressed;
 
-  const ButtonAccept({Key? key, required this.onPressed}) : super(key: key);
+  const ButtonAccept({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:tphotos/ui/models/photo_list_item.dart';
 import 'package:tphotos/ui/models/timelie_group_by.dart';
 
 class TimelineEvent extends BaseEvent {
-  const TimelineEvent(List<Object?> properties) : super(properties);
+  const TimelineEvent(super.properties);
 }
 
 class TimelineEventLoad extends TimelineEvent {

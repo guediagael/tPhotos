@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tphotos/bloc/base/navigator/base_nav_state.dart';
-
 import 'package:tphotos/data/local/preferences/preferences_id_api.dart';
 
 import 'base_event.dart';
@@ -15,9 +13,8 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
   final PreferencesIdApi? preferencesIdApi;
   final Type _initialStateType;
 
-  BaseBloc(BaseState initialState, [this.preferencesIdApi])
-      : _initialStateType = initialState.runtimeType,
-        super(initialState) {
+  BaseBloc(super.initialState, [this.preferencesIdApi])
+      : _initialStateType = initialState.runtimeType {
     on<CommonEvent>(_commonEvent);
     on<ShowDialogEvent>(_onShowDialogEvent);
     on<PromptAuthEvent>(_onPromptAuthEvent);
@@ -108,7 +105,7 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
   }
 
   void errorHandler(dynamic error, ErrorViewType errorViewType) {
-    if (error is DioError) {
+    if (error is DioException) {
       networkErrorHandler(error, errorViewType);
     } else {
       debugPrint("Not Dio Error string ${(error as Error).toString()}");

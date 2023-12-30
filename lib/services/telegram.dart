@@ -4,15 +4,15 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:math';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:tphotos/bloc/base/navigator/base_nav_event.dart';
-import 'package:tphotos/bloc/base/navigator/base_navigator_bloc.dart';
-
 import 'package:tdlib/td_api.dart';
 import 'package:tdlib/tdlib.dart';
+import 'package:tphotos/bloc/base/navigator/base_nav_event.dart';
+import 'package:tphotos/bloc/base/navigator/base_navigator_bloc.dart';
 
 int _random() => Random().nextInt(10000000);
 
@@ -24,8 +24,6 @@ class TelegramService extends ChangeNotifier {
   Map callbackResults = <int, Future<void>>{};
   late Directory appDocDir;
   late Directory appExtDir;
-
-  // String lastRouteName;
 
   final ReceivePort _receivePort = ReceivePort();
   late Isolate _isolate;
@@ -39,16 +37,28 @@ class TelegramService extends ChangeNotifier {
 
   late BaseNavigatorBloc navigatorBloc;
 
-  static Future<TelegramService> build() async {
+  static Future<TelegramService> build(Map<String, dynamic> keys) async {
     final packageInfo = await PackageInfo.fromPlatform();
-    final appVersion = packageInfo.version;
 
     final keysFile = await rootBundle.loadString('secrets/keys.json');
     final keys = await json.decode(keysFile);
     final tgHash = keys['telegram_api_hash'];
     final tgAppId = keys['telegram_app_id'];
+
+    String? deviceModel;
+    if (Platform.isAndroid) {
+      final di = await DeviceInfoPlugin().androidInfo;
+      deviceModel = di.manufacturer;
+    }else if (Platform.isIOS){
+      final di = await DeviceInfoPlugin().iosInfo;
+      deviceModel = di.model;
+    }
     return TelegramService(
-        appVersion: appVersion, applicationId: tgAppId, apiHash: tgHash);
+        appVersion: "${packageInfo.installerStore} - ${packageInfo.version}",
+        applicationId: tgAppId,
+        apiHash: tgHash,
+        systemVersion: "${Platform.operatingSystem} - ${Platform.operatingSystemVersion}",
+        deviceModel: deviceModel);
   }
 
   TelegramService(
@@ -67,7 +77,10 @@ class TelegramService extends ChangeNotifier {
   /// Returns Pointer to the created instance of TDLib.
   /// Pointer 0 mean No client instance.
   void initClient() async {
-    final tdlibPath = (Platform.isAndroid || Platform.isLinux || Platform.isWindows) ? 'libtdjson.so' : null;
+    final tdlibPath =
+        (Platform.isAndroid || Platform.isLinux || Platform.isWindows)
+            ? 'libtdjson.so'
+            : null;
     await TdPlugin.initialize(tdlibPath);
     _client = tdCreate();
 
@@ -164,7 +177,7 @@ class TelegramService extends ChangeNotifier {
               ignoreFileNames: false,
               enableStorageOptimizer: true,
               systemLanguageCode: systemLanguage ?? 'EN',
-              filesDirectory: appExtDir.path + '/tdlib',
+              filesDirectory: '${appExtDir.path}/tdlib',
               databaseDirectory: appDocDir.path,
               applicationVersion: appVersion,
               deviceModel: deviceModel ?? "UNKNOWN",
@@ -205,7 +218,9 @@ class TelegramService extends ChangeNotifier {
     tdSend(_client, const Close());
   }
 
+
   /// Sends request to the TDLib client. May be called from any thread.
+  // ignore: body_might_complete_normally_nullable
   Future<TdObject?> send(event,
       {Future<void>? callback, Function(TdError)? errorCallback}) async {
     // ignore: missing_return

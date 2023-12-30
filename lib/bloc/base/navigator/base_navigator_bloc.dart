@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'base_nav_event.dart';
 import 'base_nav_state.dart';
 
@@ -8,9 +9,8 @@ abstract class BaseNavigatorBloc
     extends Bloc<BaseNavigatorEvent, BaseNavigatorState> {
   final Type _initialStateType;
 
-  BaseNavigatorBloc(BaseNavigatorState initialState)
-      : _initialStateType = initialState.runtimeType,
-        super(initialState) {
+  BaseNavigatorBloc(super.initialState)
+      : _initialStateType = initialState.runtimeType {
     on<BaseNavigatorEventShowLoading>(_onShowLoading);
     on<BaseNavigatorEventPop>(_onPop);
     on<BaseNavigatorEventLogout>(_onLogout);

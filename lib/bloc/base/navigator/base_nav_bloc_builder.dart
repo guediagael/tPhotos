@@ -10,14 +10,12 @@ class BaseNavigatorBlocBuilder
   final BlocWidgetBuilder<BaseNavigatorState> navigatorBlocWidgetBuilder;
 
   BaseNavigatorBlocBuilder(
-      {Key? key,
-      required BaseNavigatorBloc bloc,
+      {super.key,
+      required BaseNavigatorBloc super.bloc,
       this.buildWhenCondition,
       required this.navigatorBlocWidgetBuilder})
       : super(
-            key: key,
             builder: navigatorBlocWidgetBuilder,
-            bloc: bloc,
             buildWhen: buildWhenCondition ??
                 (BaseNavigatorState prevState, BaseNavigatorState newState) {
                   return !isCommonNavigatorState(newState) &&

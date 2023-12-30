@@ -1,7 +1,7 @@
 import 'package:tphotos/bloc/base/data/base_state.dart';
 
 class FolderSelectionState extends BaseState {
-  const FolderSelectionState(List<Object?> properties) : super(properties);
+  const FolderSelectionState(super.properties);
 }
 
 class FolderSelectionStateInitial extends FolderSelectionState {

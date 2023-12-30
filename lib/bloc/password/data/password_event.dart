@@ -1,7 +1,7 @@
 import 'package:tphotos/bloc/base/data/base_event.dart';
 
 abstract class PasswordEvent extends BaseEvent {
-  const PasswordEvent(List<Object?> properties) : super(properties);
+  const PasswordEvent(super.properties);
 }
 
 class PasswordSendEvent extends PasswordEvent {

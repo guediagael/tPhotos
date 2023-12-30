@@ -7,8 +7,7 @@ import 'package:tphotos/ui/models/photo_list_item.dart';
 class PhotoSearchWidget extends StatelessWidget {
   final PhotoListItem photoListItem;
 
-  const PhotoSearchWidget({Key? key, required this.photoListItem})
-      : super(key: key);
+  const PhotoSearchWidget({super.key, required this.photoListItem});
 
   @override
   Widget build(BuildContext context) {

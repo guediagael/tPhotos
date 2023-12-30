@@ -3,7 +3,7 @@ import 'package:tphotos/ui/models/photo_list_item.dart';
 import 'package:tphotos/ui/models/timelie_group_by.dart';
 
 class TimelineState extends BaseState {
-  const TimelineState(List<Object?> properties) : super(properties);
+  const TimelineState(super.properties);
 }
 
 class TimelineStateInitial extends TimelineState {

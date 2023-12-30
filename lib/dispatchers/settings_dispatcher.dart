@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tphotos/action_listeners/settings_action_listener.dart';
@@ -167,15 +165,5 @@ class _SettingsDispatcherState extends State<SettingsDispatcher>
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => FolderSelectionDispatcher.buildFolderSelectionScreen(
             fromSettings: true)));
-  }
-
-  void _listDirs(Stream<FileSystemEntity> dirList) async {
-    await for (final FileSystemEntity f in dirList) {
-      if (f is File) {
-        debugPrint('Found file ${f.path}');
-      } else if (f is Directory) {
-        debugPrint('Found dir ${f.path}');
-      }
-    }
   }
 }
